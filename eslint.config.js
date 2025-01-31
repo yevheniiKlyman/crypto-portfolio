@@ -27,6 +27,7 @@ export default tseslint.config(
       'quotes': ['error', 'single'],
       'no-console': ['error'],
       "semi": ["error", "always"],
+      "eol-last": ["error", "always"],
     },
   },
 )

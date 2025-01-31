@@ -1,0 +1,13 @@
+.Tickers {
+  :global(.ant-collapse-content .ant-collapse-content-box) {
+    padding: 8px;
+  }
+
+  :global(.ant-spin-container .ant-pagination) {
+    margin-bottom: 0;
+  }
+
+  :global(.ant-table-row:hover) {
+    cursor: pointer;
+  }
+}
