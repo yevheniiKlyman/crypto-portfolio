@@ -16,22 +16,22 @@ export const transformGlobalCryptoInfoResponse = (resp: GlobalCryptoInfoResponse
     {
       key: 2,
       label: 'Total crypto market capitalization',
-      children: `$${formatNumber(resp.total_mcap)}`,
+      children: `$${formatNumber(resp.total_mcap, 2)}`,
     },
     {
       key: 3,
       label: 'Total trading volume for last 24h',
-      children: `$${formatNumber(resp.total_volume)}`,
+      children: `$${formatNumber(resp.total_volume, 2)}`,
     },
     {
       key: 9,
       label: 'ATH total trading volume',
-      children: `$${formatNumber(resp.volume_ath)}`,
+      children: `$${formatNumber(resp.volume_ath, 2)}`,
     },
     {
       key: 10,
       label: 'ATH total marketcap',
-      children: `$${formatNumber(resp.mcap_ath)}`,
+      children: `$${formatNumber(resp.mcap_ath, 2)}`,
     },
     {
       key: 6,

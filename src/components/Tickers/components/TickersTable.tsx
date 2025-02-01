@@ -2,6 +2,8 @@ import React from 'react';
 import { Table, Tag, Typography } from 'antd';
 import type { TableProps } from 'antd';
 import { Coin } from '../../../store/coinlore/coinloreDataTypes';
+import { useAppDispath } from '../../../store';
+import { setCoinIdAction } from '../../../store/coinlore/coinlore.slice';
 
 interface TickersTableProps {
   data: Coin[];
@@ -43,8 +45,11 @@ const columns: TableProps<Coin>['columns'] = [
   },
 ];
 
-const TickersTable: React.FC<TickersTableProps> = ({ data, coinsNum, onPaginationPageChange }) => (
-  <Table<Coin>
+const TickersTable: React.FC<TickersTableProps> = ({ data, coinsNum, onPaginationPageChange }) => {
+  const dispatch = useAppDispath();
+
+  return (
+    <Table<Coin>
     columns={columns}
     dataSource={data}
     size="small"
@@ -55,7 +60,13 @@ const TickersTable: React.FC<TickersTableProps> = ({ data, coinsNum, onPaginatio
       showSizeChanger: false,
       onChange: onPaginationPageChange,
     }}
+    onRow={(record) => ({
+      onClick: () => {
+        dispatch(setCoinIdAction(record.id));
+      },
+    })}
   />
-);
+  );
+};
 
 export default TickersTable;

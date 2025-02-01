@@ -6,6 +6,7 @@ import type {
   Exchanges,
   Exchange,
   GlobalCryptoInfoItem,
+  Coin,
 } from './coinloreDataTypes';
 import { transformGlobalCryptoInfoResponse } from './utils';
 
@@ -30,6 +31,11 @@ export const coinloreApi = createApi({
       }),
     }),
 
+    getTicker: builder.query<Coin, string>({
+      query: (id) => `ticker/?id=${id}`,
+      transformResponse: (response: Coin[]) => response[0],
+    }),
+
     getMarketsForCoin: builder.query<MarketForCoin[], number>({
       query: (id) => `coin/markets/?id=${id}`,
     }),
@@ -47,6 +53,7 @@ export const coinloreApi = createApi({
 export const {
   useGetGlobalCryptoInfoQuery,
   useGetTickersQuery,
+  useGetTickerQuery,
   useGetMarketsForCoinQuery,
   useGetAllExchangesQuery,
   useGetExchangeQuery,

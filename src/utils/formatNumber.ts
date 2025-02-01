@@ -1,15 +1,26 @@
-export const formatNumber = (num: number): string => {
+export const formatNumber = (num: number, precision: number | void): string => {
   let result = '';
 
   if (num >= 1_000_000_000_000) {
-        result = (num / 1_000_000_000_000).toFixed(2) + 'T';
+    const n = num / 1_000_000_000_000;
+    result = (precision ? n.toFixed(precision) : n) + 'T';
   } else if (num >= 1_000_000_000) {
-      result = (num / 1_000_000_000).toFixed(2) + 'B';
+    const n = num / 1_000_000_000;
+    result = (precision ? n.toFixed(precision) : n) + 'B';
   } else if (num >= 1_000_000) {
-      result = (num / 1_000_000).toFixed(2) + 'M';
+    const n = num / 1_000_000;
+    result = (precision ? n.toFixed(precision) : n) + 'M';
   } else {
-      result = num % 1 ? num.toFixed(2) : num.toString();
+    result = precision ? num.toFixed(precision) : num.toString();
   }
 
-  return result.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const [integerPart, decimalPart] = result.split('.');
+
+  result = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  if (decimalPart) {
+    result += '.' + decimalPart;
+  }
+
+  return result;
 };
