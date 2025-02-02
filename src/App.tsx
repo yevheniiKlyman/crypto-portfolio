@@ -24,8 +24,8 @@ const App: React.FC = () => (
     <Layout style={bodyLayoutStyle}>
       <Routes>
         <Route path="/" element={<MarketStatisticPage />} />
-        <Route path='/portfolio' element={<PortfolioPage />} />
-        <Route path='/exchanges' element={<ExchangesPage />} />
+        <Route path="/portfolio" element={<PortfolioPage />} />
+        <Route path="/exchanges" element={<ExchangesPage />} />
       </Routes>
     </Layout>
   </Layout>

@@ -1,17 +1,23 @@
 import { Typography, Flex, Spin, Descriptions, Tag, Alert, Button } from 'antd';
 import { useAppDispath, useAppSelector } from '../../store';
-import { useGetTickerQuery } from '../../store/coinlore/coinlore.api';
-import { selectCoinId, setCoinIdAction } from '../../store/coinlore/coinlore.slice';
+import { LeftOutlined, StarTwoTone } from '@ant-design/icons';
+import {
+  coinloreApi,
+  useGetTickerQuery,
+} from '../../store/coinlore/coinlore.api';
+import {
+  selectCoinId,
+  setCoinIdAction,
+} from '../../store/coinlore/coinlore.slice';
 import { formatNumber } from '../../utils/formatNumber';
 import classes from './styles/CoinDetails.module.css';
-import { LeftOutlined, StarTwoTone } from '@ant-design/icons';
 
 const { Title } = Typography;
 
 const CoinDetails = (): React.ReactElement => {
   const coinId = useAppSelector(selectCoinId);
   const dispatch = useAppDispath();
-  const { data, error, isFetching } = useGetTickerQuery(coinId, {
+  const { data, error, isLoading, isFetching } = useGetTickerQuery(coinId, {
     pollingInterval: 10 * 60 * 1000,
     skipPollingIfUnfocused: true,
   });
@@ -21,22 +27,27 @@ const CoinDetails = (): React.ReactElement => {
       <Button
         icon={<LeftOutlined />}
         style={{ marginBottom: '1rem' }}
-        onClick={() => dispatch(setCoinIdAction(''))}
+        onClick={() => {
+          dispatch(setCoinIdAction(''));
+          setTimeout(() => {
+            dispatch(coinloreApi.util.invalidateTags(['Ticker']));
+          });
+        }}
       >
         Back to Global statistics
       </Button>
-      {isFetching && (
+      {isLoading && (
         <Flex justify="center" style={{ paddingTop: '2rem' }}>
           <Spin size="large" />
         </Flex>
       )}
 
-      {!isFetching && data && (
+      {!isLoading && data && (
         <>
-          <Title level={2}>
+          <Title level={2} className={isFetching ? 'blur' : ''}>
             ({data.symbol}) {data.name}
           </Title>
-          <Descriptions column={1}>
+          <Descriptions column={1} className={isFetching ? 'blur' : ''}>
             <Descriptions.Item key="price_usd" label={<b>Price</b>}>
               <b>${formatNumber(Number(data.price_usd))}</b>
             </Descriptions.Item>
@@ -88,17 +99,18 @@ const CoinDetails = (): React.ReactElement => {
             </Descriptions.Item>
           </Descriptions>
 
-          <Flex gap="small" align='center' style={{ marginTop: '1.5rem' }}>
-            <Button
-              icon={<StarTwoTone />}
-              variant="outlined"
-              color='primary'
-            >
+          <Flex
+            gap="small"
+            align="center"
+            style={{ marginTop: '1.5rem' }}
+            className={isFetching ? 'blur' : ''}
+          >
+            <Button icon={<StarTwoTone />} variant="outlined" color="primary">
               Add to Watchlist
             </Button>
             <Button
               variant="solid"
-              color='primary'
+              color="primary"
               // onClick={() => dispatch(setCoinIdAction(''))}
             >
               Show top exchanges for {data.symbol}

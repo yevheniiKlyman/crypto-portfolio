@@ -2,8 +2,12 @@ import React from 'react';
 import { Table, Tag, Typography } from 'antd';
 import type { TableProps } from 'antd';
 import { Coin } from '../../../store/coinlore/coinloreDataTypes';
-import { useAppDispath } from '../../../store';
-import { setCoinIdAction } from '../../../store/coinlore/coinlore.slice';
+import { useAppDispath, useAppSelector } from '../../../store';
+import {
+  selectCoinId,
+  setCoinIdAction,
+} from '../../../store/coinlore/coinlore.slice';
+import { coinloreApi } from '../../../store/coinlore/coinlore.api';
 
 interface TickersTableProps {
   data: Coin[];
@@ -45,27 +49,37 @@ const columns: TableProps<Coin>['columns'] = [
   },
 ];
 
-const TickersTable: React.FC<TickersTableProps> = ({ data, coinsNum, onPaginationPageChange }) => {
+const TickersTable: React.FC<TickersTableProps> = ({
+  data,
+  coinsNum,
+  onPaginationPageChange,
+}) => {
   const dispatch = useAppDispath();
+  const coinId = useAppSelector(selectCoinId);
 
   return (
     <Table<Coin>
-    columns={columns}
-    dataSource={data}
-    size="small"
-    pagination={{
-      defaultCurrent: 1,
-      pageSize: 50,
-      total: coinsNum,
-      showSizeChanger: false,
-      onChange: onPaginationPageChange,
-    }}
-    onRow={(record) => ({
-      onClick: () => {
-        dispatch(setCoinIdAction(record.id));
-      },
-    })}
-  />
+      columns={columns}
+      dataSource={data}
+      size="small"
+      pagination={{
+        defaultCurrent: 1,
+        pageSize: 50,
+        total: coinsNum,
+        showSizeChanger: false,
+        onChange: onPaginationPageChange,
+      }}
+      onRow={(record) => ({
+        onClick: () => {
+          dispatch(setCoinIdAction(record.id));
+          setTimeout(() => {
+            dispatch(
+              coinloreApi.util.invalidateTags([{ type: 'Ticker', id: coinId }])
+            );
+          });
+        },
+      })}
+    />
   );
 };
 

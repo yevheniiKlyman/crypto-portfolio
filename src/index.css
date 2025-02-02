@@ -8,3 +8,7 @@ html {
   scrollbar-width: thin;
   scrollbar-color: #eaeaea transparent;
 }
+
+.blur {
+  opacity: 0.5;
+}

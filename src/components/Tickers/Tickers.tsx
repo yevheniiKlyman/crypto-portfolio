@@ -55,7 +55,9 @@ const Tickers: React.FC = () => {
     },
   ];
 
-  return <Collapse items={items} defaultActiveKey={2} className={classes.Tickers} />;
+  return (
+    <Collapse items={items} defaultActiveKey={2} className={classes.Tickers} />
+  );
 };
 
 export default Tickers;

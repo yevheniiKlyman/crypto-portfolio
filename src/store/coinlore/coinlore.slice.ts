@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 interface CoinloreState {
-  coinId: string
+  coinId: string;
 }
 
 const initialState: CoinloreState = { coinId: '' };

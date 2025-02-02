@@ -14,7 +14,7 @@ const { Title } = Typography;
 
 const GlobalCryptoInfo: React.FC = () => {
   const { data, error, isLoading } = useGetGlobalCryptoInfoQuery(null, {
-    pollingInterval: 10 * 60 *1000,
+    pollingInterval: 10 * 60 * 1000,
     skipPollingIfUnfocused: true,
   });
 

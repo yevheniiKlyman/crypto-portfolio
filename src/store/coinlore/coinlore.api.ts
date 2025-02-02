@@ -13,6 +13,7 @@ import { transformGlobalCryptoInfoResponse } from './utils';
 export const coinloreApi = createApi({
   reducerPath: 'coinloreApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://api.coinlore.net/api/' }),
+  tagTypes: ['Ticker'],
   endpoints: (builder) => ({
     getGlobalCryptoInfo: builder.query<GlobalCryptoInfoItem[], null>({
       query: () => 'global/',
@@ -34,6 +35,10 @@ export const coinloreApi = createApi({
     getTicker: builder.query<Coin, string>({
       query: (id) => `ticker/?id=${id}`,
       transformResponse: (response: Coin[]) => response[0],
+      providesTags: (result) =>
+        result
+          ? [{ type: 'Ticker' as const, id: result.id }, 'Ticker']
+          : ['Ticker'],
     }),
 
     getMarketsForCoin: builder.query<MarketForCoin[], number>({

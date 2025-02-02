@@ -1,7 +1,12 @@
 import { formatNumber } from '../../utils/formatNumber';
-import { GlobalCryptoInfoItem, GlobalCryptoInfoResponse } from './coinloreDataTypes';
+import {
+  GlobalCryptoInfoItem,
+  GlobalCryptoInfoResponse,
+} from './coinloreDataTypes';
 
-export const transformGlobalCryptoInfoResponse = (resp: GlobalCryptoInfoResponse): GlobalCryptoInfoItem[] => {
+export const transformGlobalCryptoInfoResponse = (
+  resp: GlobalCryptoInfoResponse
+): GlobalCryptoInfoItem[] => {
   return [
     {
       key: 0,
