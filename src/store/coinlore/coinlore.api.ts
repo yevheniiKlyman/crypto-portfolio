@@ -9,6 +9,7 @@ import type {
   Coin,
 } from './coinloreDataTypes';
 import { transformGlobalCryptoInfoResponse } from './utils';
+import { formatNumber } from '../../utils/formatNumber';
 
 export const coinloreApi = createApi({
   reducerPath: 'coinloreApi',
@@ -41,9 +42,17 @@ export const coinloreApi = createApi({
           : ['Ticker'],
     }),
 
-    getMarketsForCoin: builder.query<MarketForCoin[], number>({
+    getMarketsForCoin: builder.query<MarketForCoin[], string>({
       query: (id) => `coin/markets/?id=${id}`,
-    }),
+      transformResponse: (response: MarketForCoin[]) => ([
+        ... response.map((market) => ({
+          ...market,
+          price: formatNumber(Number(market.price), 2),
+          price_usd: formatNumber(Number(market.price_usd), 2),
+          key: market.name + market.quote,
+        }))
+      ]),
+}),
 
     getAllExchanges: builder.query<Exchanges, void>({
       query: () => 'exchanges/',
@@ -62,4 +71,5 @@ export const {
   useGetMarketsForCoinQuery,
   useGetAllExchangesQuery,
   useGetExchangeQuery,
+  useLazyGetMarketsForCoinQuery,
 } = coinloreApi;

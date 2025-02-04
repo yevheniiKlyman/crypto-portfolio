@@ -52,7 +52,7 @@ export const transformGlobalCryptoInfoResponse = (
     },
     {
       key: 8,
-      label: 'How trading volume changed for last 24h',
+      label: 'On average how prices has been changed',
       children: resp.avg_change_percent,
       tag: true,
     },

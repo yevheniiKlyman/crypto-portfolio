@@ -1,26 +1,44 @@
-import { Typography, Flex, Spin, Descriptions, Tag, Alert, Button } from 'antd';
+import { useEffect, useState } from 'react';
+import { Typography, Flex, Spin, Alert, Button } from 'antd';
 import { useAppDispath, useAppSelector } from '../../store';
 import { LeftOutlined, StarTwoTone } from '@ant-design/icons';
 import {
   coinloreApi,
   useGetTickerQuery,
+  useLazyGetMarketsForCoinQuery,
 } from '../../store/coinlore/coinlore.api';
 import {
   selectCoinId,
   setCoinIdAction,
 } from '../../store/coinlore/coinlore.slice';
-import { formatNumber } from '../../utils/formatNumber';
-import classes from './styles/CoinDetails.module.css';
+import CoinDescription from './components/CoinDescription/CoinDescription';
+import Markets from './components/Markets';
 
 const { Title } = Typography;
 
-const CoinDetails = (): React.ReactElement => {
+const CoinDetails: React.FC = () => {
   const coinId = useAppSelector(selectCoinId);
   const dispatch = useAppDispath();
-  const { data, error, isLoading, isFetching } = useGetTickerQuery(coinId, {
+  const [showMarkets, setShowMarkets] = useState(false);
+
+  const [
+    triggerMarketsLoad,
+    { data: markets, isFetching: isMarketsFetching, isError: isMarketsError },
+  ] = useLazyGetMarketsForCoinQuery();
+
+  const {
+    data: coinData,
+    error,
+    isLoading,
+    isFetching,
+  } = useGetTickerQuery(coinId, {
     pollingInterval: 10 * 60 * 1000,
     skipPollingIfUnfocused: true,
   });
+
+  useEffect(() => {
+    setShowMarkets(false);
+  }, [coinId]);
 
   return (
     <>
@@ -42,80 +60,45 @@ const CoinDetails = (): React.ReactElement => {
         </Flex>
       )}
 
-      {!isLoading && data && (
+      {!isLoading && coinData && (
         <>
-          <Title level={2} className={isFetching ? 'blur' : ''}>
-            ({data.symbol}) {data.name}
+          <Title level={2} className={isFetching ? 'blur-loading' : ''}>
+            ({coinData.symbol}) {coinData.name}
           </Title>
-          <Descriptions column={1} className={isFetching ? 'blur' : ''}>
-            <Descriptions.Item key="price_usd" label={<b>Price</b>}>
-              <b>${formatNumber(Number(data.price_usd))}</b>
-            </Descriptions.Item>
-            <Descriptions.Item key="price_change">
-              <Descriptions column={3} className={classes.priceChange}>
-                <Descriptions.Item key="percent_change_1h" label="1h">
-                  <Tag
-                    color={
-                      Number(data.percent_change_1h) >= 0 ? 'success' : 'error'
-                    }
-                  >
-                    {data.percent_change_1h}%
-                  </Tag>
-                </Descriptions.Item>
-                <Descriptions.Item key="percent_change_24h" label="24h">
-                  <Tag
-                    color={
-                      Number(data.percent_change_24h) >= 0 ? 'success' : 'error'
-                    }
-                  >
-                    {data.percent_change_24h}%
-                  </Tag>
-                </Descriptions.Item>
-                <Descriptions.Item key="percent_change_7d" label="7d">
-                  <Tag
-                    color={
-                      Number(data.percent_change_7d) >= 0 ? 'success' : 'error'
-                    }
-                  >
-                    {data.percent_change_7d}%
-                  </Tag>
-                </Descriptions.Item>
-              </Descriptions>
-            </Descriptions.Item>
-            <Descriptions.Item key="market_cap_usd" label="Coin marketcap">
-              ${formatNumber(Number(data.market_cap_usd), 2)}
-            </Descriptions.Item>
-            <Descriptions.Item
-              key="volume24"
-              label="Trading volume of coin for last 24h"
-            >
-              ${formatNumber(data.volume24, 2)}
-            </Descriptions.Item>
-            <Descriptions.Item key="tsupply" label="Total Supply">
-              {formatNumber(Number(data.tsupply), 2)}
-            </Descriptions.Item>
-            <Descriptions.Item key="csupply" label="Circulating Supply">
-              {formatNumber(Number(data.csupply), 2)}
-            </Descriptions.Item>
-          </Descriptions>
-
+          <CoinDescription data={coinData} isFetching={isFetching} />
           <Flex
             gap="small"
             align="center"
             style={{ marginTop: '1.5rem' }}
-            className={isFetching ? 'blur' : ''}
+            className={isFetching ? 'blur-loading' : ''}
           >
             <Button icon={<StarTwoTone />} variant="outlined" color="primary">
               Add to Watchlist
             </Button>
-            <Button
-              variant="solid"
-              color="primary"
-              // onClick={() => dispatch(setCoinIdAction(''))}
-            >
-              Show top exchanges for {data.symbol}
-            </Button>
+            {(!showMarkets || isMarketsFetching || isMarketsError) && (
+              <Button
+                variant="solid"
+                color="primary"
+                loading={isMarketsFetching}
+                onClick={() => {
+                  setShowMarkets(true);
+                  triggerMarketsLoad(coinId);
+                }}
+              >
+                Show top markets for {coinData.symbol}
+              </Button>
+            )}
           </Flex>
+          {markets && showMarkets && !isMarketsFetching && (
+            <Markets data={markets} />
+          )}
+          {isMarketsError && (
+            <Alert
+              message="Something went wrong. Please try again later..."
+              type="error"
+              style={{ marginTop: '1.5rem' }}
+            />
+          )}
         </>
       )}
 

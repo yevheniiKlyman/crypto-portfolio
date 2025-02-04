@@ -15,7 +15,7 @@ interface AppContentProps {
   children: React.ReactNode;
 }
 
-const AppContent: React.FC<AppContentProps> =({ children }) => {
+const AppContent: React.FC<AppContentProps> = ({ children }) => {
   return (
     <Layout.Content style={contentStyle}>
       {children}

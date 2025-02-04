@@ -16,7 +16,7 @@ const headerStyle: React.CSSProperties = {
   background: 'linear-gradient(135deg, rgba(0,52,255,1) 0%, rgba(22,119,255,1) 100%)',
 };
 
-const AppHeader: React.FC =() => {
+const AppHeader: React.FC = () => {
   return <Layout.Header style={headerStyle}>
     <Flex align="center" justify="left" style={{ width: '100%', maxWidth: '1600px', paddingInline: '1rem' }}>Crypto Portfolio App</Flex>
   </Layout.Header>;

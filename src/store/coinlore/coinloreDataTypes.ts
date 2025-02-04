@@ -50,8 +50,8 @@ export interface MarketForCoin {
   name: string;
   base: string;
   quote: string;
-  price: number;
-  price_usd: number;
+  price: number | string;
+  price_usd: number | string;
   volume: number;
   volume_usd: number;
   time: number;
