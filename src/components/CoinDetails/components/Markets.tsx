@@ -1,5 +1,5 @@
 import { Divider, Table, TableProps, Typography } from 'antd';
-import { MarketForCoin } from '../../../store/coinlore/coinloreDataTypes';
+import { MarketForCoin } from '@store/coinlore/coinloreDataTypes';
 
 interface MarketsProps {
   data: MarketForCoin[];

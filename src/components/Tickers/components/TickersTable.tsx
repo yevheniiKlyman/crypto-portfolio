@@ -1,13 +1,13 @@
 import React from 'react';
 import { Table, Tag, Typography } from 'antd';
 import type { TableProps } from 'antd';
-import { Coin } from '../../../store/coinlore/coinloreDataTypes';
-import { useAppDispath, useAppSelector } from '../../../store';
+import { Coin } from '@store/coinlore/coinloreDataTypes';
+import { useAppDispath, useAppSelector } from '@/store';
 import {
   selectCoinId,
   setCoinIdAction,
-} from '../../../store/coinlore/coinlore.slice';
-import { coinloreApi } from '../../../store/coinlore/coinlore.api';
+} from '@store/coinlore/coinlore.slice';
+import { coinloreApi } from '@store/coinlore/coinlore.api';
 
 interface TickersTableProps {
   data: Coin[];

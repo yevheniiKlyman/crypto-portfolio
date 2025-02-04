@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Alert, Collapse, CollapseProps, Flex, Spin } from 'antd';
-import { useGetTickersQuery } from '../../store/coinlore/coinlore.api';
+import { useGetTickersQuery } from '@store/coinlore/coinlore.api';
 import TickersTable from './components/TickersTable';
 import classes from './styles/Tickers.module.css';
 

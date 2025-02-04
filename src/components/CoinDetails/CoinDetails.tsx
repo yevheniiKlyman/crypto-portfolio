@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Typography, Flex, Spin, Alert, Button } from 'antd';
-import { useAppDispath, useAppSelector } from '../../store';
+import { useAppDispath, useAppSelector } from '@/store';
 import { LeftOutlined, StarTwoTone } from '@ant-design/icons';
 import {
   coinloreApi,
   useGetTickerQuery,
   useLazyGetMarketsForCoinQuery,
-} from '../../store/coinlore/coinlore.api';
+} from '@store/coinlore/coinlore.api';
 import {
   selectCoinId,
   setCoinIdAction,
-} from '../../store/coinlore/coinlore.slice';
+} from '@store/coinlore/coinlore.slice';
 import CoinDescription from './components/CoinDescription/CoinDescription';
 import Markets from './components/Markets';
 

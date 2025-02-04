@@ -1,6 +1,6 @@
 import { Descriptions, Tag } from 'antd';
-import { formatNumber } from '../../../../utils/formatNumber';
-import { Coin } from '../../../../store/coinlore/coinloreDataTypes';
+import { formatNumber } from '@utils/formatNumber';
+import { Coin } from '@store/coinlore/coinloreDataTypes';
 import classes from './styles/CoinDetails.module.css';
 
 interface CoinDescriptionProps {

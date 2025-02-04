@@ -8,8 +8,8 @@ import type {
   GlobalCryptoInfoItem,
   Coin,
 } from './coinloreDataTypes';
-import { transformGlobalCryptoInfoResponse } from './utils';
-import { formatNumber } from '../../utils/formatNumber';
+import { transformGlobalCryptoInfoResponse } from './coinloreUtils';
+import { formatNumber } from '@utils/formatNumber';
 
 export const coinloreApi = createApi({
   reducerPath: 'coinloreApi',

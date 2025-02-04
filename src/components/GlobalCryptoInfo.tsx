@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'antd';
 import { InfoCircleTwoTone } from '@ant-design/icons';
-import { useGetGlobalCryptoInfoQuery } from '../store/coinlore/coinlore.api';
+import { useGetGlobalCryptoInfoQuery } from '@store/coinlore/coinlore.api';
 
 const { Title } = Typography;
 
