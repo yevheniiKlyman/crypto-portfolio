@@ -14,12 +14,13 @@ import { formatNumber } from '@utils/formatNumber';
 export const coinloreApi = createApi({
   reducerPath: 'coinloreApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://api.coinlore.net/api/' }),
-  tagTypes: ['Ticker'],
+  tagTypes: ['Ticker', 'Tickers', 'GlobalStatistics'],
   endpoints: (builder) => ({
     getGlobalCryptoInfo: builder.query<GlobalCryptoInfoItem[], null>({
       query: () => 'global/',
       transformResponse: (response: GlobalCryptoInfoResponse[]) =>
         transformGlobalCryptoInfoResponse(response[0]),
+      providesTags: ['GlobalStatistics'],
     }),
 
     getTickers: builder.query<Tickers, number | void>({
@@ -31,6 +32,7 @@ export const coinloreApi = createApi({
           key: coin.id,
         })),
       }),
+      providesTags: ['Tickers'],
     }),
 
     getTicker: builder.query<Coin, string>({

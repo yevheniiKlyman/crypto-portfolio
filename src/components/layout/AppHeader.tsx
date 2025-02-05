@@ -1,4 +1,5 @@
 import { Layout, Flex } from 'antd';
+import Navigation from '../Navigation/Navigation';
 
 const headerStyle: React.CSSProperties = {
   position: 'fixed',
@@ -18,7 +19,7 @@ const headerStyle: React.CSSProperties = {
 
 const AppHeader: React.FC = () => {
   return <Layout.Header style={headerStyle}>
-    <Flex align="center" justify="left" style={{ width: '100%', maxWidth: '1600px', paddingInline: '1rem' }}>Crypto Portfolio App</Flex>
+    <Flex align="center" justify="left" style={{ width: '100%', maxWidth: '1600px', paddingInline: '1rem' }}><Navigation /></Flex>
   </Layout.Header>;
 };
 
