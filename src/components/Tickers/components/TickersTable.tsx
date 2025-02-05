@@ -26,11 +26,13 @@ const columns: TableProps<Coin>['columns'] = [
     title: 'Price($)',
     dataIndex: 'price_usd',
     key: 'price_usd',
+    align: 'center',
   },
   {
     title: '1h',
     dataIndex: 'percent_change_1h',
     key: 'percent_change_1h',
+    align: 'center',
     render: (percent_change_1h) => (
       <Tag color={percent_change_1h >= 0 ? 'success' : 'error'}>
         {`${percent_change_1h}%`}
@@ -41,6 +43,7 @@ const columns: TableProps<Coin>['columns'] = [
     title: '24h',
     dataIndex: 'percent_change_24h',
     key: 'percent_change_24h',
+    align: 'center',
     render: (percent_change_24h) => (
       <Tag color={percent_change_24h >= 0 ? 'success' : 'error'}>
         {`${percent_change_24h}%`}
@@ -62,6 +65,7 @@ const TickersTable: React.FC<TickersTableProps> = ({
       columns={columns}
       dataSource={data}
       size="small"
+      bordered
       pagination={{
         defaultCurrent: 1,
         pageSize: 50,

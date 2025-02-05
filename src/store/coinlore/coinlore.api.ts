@@ -7,6 +7,7 @@ import type {
   Exchange,
   GlobalCryptoInfoItem,
   Coin,
+  ExchangeInExchangesFormated,
 } from './coinloreDataTypes';
 import { transformGlobalCryptoInfoResponse } from './coinloreUtils';
 import { formatNumber } from '@utils/formatNumber';
@@ -46,22 +47,39 @@ export const coinloreApi = createApi({
 
     getMarketsForCoin: builder.query<MarketForCoin[], string>({
       query: (id) => `coin/markets/?id=${id}`,
-      transformResponse: (response: MarketForCoin[]) => ([
-        ... response.map((market) => ({
+      transformResponse: (response: MarketForCoin[]) => [
+        ...response.map((market) => ({
           ...market,
           price: formatNumber(Number(market.price), 2),
           price_usd: formatNumber(Number(market.price_usd), 2),
           key: market.name + market.quote,
-        }))
-      ]),
-}),
-
-    getAllExchanges: builder.query<Exchanges, void>({
-      query: () => 'exchanges/',
+        })),
+      ],
     }),
 
-    getExchange: builder.query<Exchange, number>({
+    getAllExchanges: builder.query<ExchangeInExchangesFormated[], void>({
+      query: () => 'exchanges/',
+      transformResponse: (response: Exchanges) => [
+        ...Object.values(response).filter((exchange) => exchange.volume_usd !== 0).map((exchange) => ({
+          ...exchange,
+          key: exchange.id,
+          volume_usd_formatted: formatNumber(Number(exchange.volume_usd), 2),
+        })),
+      ]
+    }),
+
+    getExchange: builder.query<Exchange, string>({
       query: (id) => `exchange/?id=${id}`,
+      transformResponse: (response: Exchange) => ({
+        ...response,
+        pairs: response?.pairs?.map((pair) => ({
+          ...pair,
+          key: pair.base + pair.quote + pair.price + pair.volume,
+          price: formatNumber(Number(pair.price), 2),
+          price_usd: formatNumber(Number(pair.price_usd), 2),
+          volume: formatNumber(Number(pair.volume), 2),
+        })),
+      })
     }),
   }),
 });

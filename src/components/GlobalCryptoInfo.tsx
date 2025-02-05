@@ -10,8 +10,6 @@ import {
 import { InfoCircleTwoTone } from '@ant-design/icons';
 import { useGetGlobalCryptoInfoQuery } from '@store/coinlore/coinlore.api';
 
-const { Title } = Typography;
-
 const GlobalCryptoInfo: React.FC = () => {
   const { data, error, isLoading } = useGetGlobalCryptoInfoQuery(null, {
     pollingInterval: 10 * 60 * 1000,
@@ -20,12 +18,12 @@ const GlobalCryptoInfo: React.FC = () => {
 
   return (
     <>
-      <Title level={1}>
+      <Typography.Title level={1}>
         Global crypto statistics&#160;
         <Tooltip title="According to coinlore.com">
           <InfoCircleTwoTone style={{ fontSize: '32px' }} />
         </Tooltip>
-      </Title>
+      </Typography.Title>
 
       {isLoading && (
         <Flex justify="center" style={{ paddingTop: '2rem' }}>

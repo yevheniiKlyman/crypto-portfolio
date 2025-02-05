@@ -8,7 +8,7 @@ import { useAppDispath, useAppSelector } from '@/store';
 import { selectCoinId, setCoinIdAction } from '@store/coinlore/coinlore.slice';
 import { coinloreApi } from '@/store/coinlore/coinlore.api';
 
-const MarketStatisticPage: React.FC =() => {
+const MarketStatisticPage: React.FC = () => {
   const coinId = useAppSelector(selectCoinId);
   const dispatch = useAppDispath();
 
@@ -16,10 +16,16 @@ const MarketStatisticPage: React.FC =() => {
     return () => {
       setTimeout(() => {
         dispatch(setCoinIdAction(''));
-        dispatch(coinloreApi.util.invalidateTags(['Ticker', 'Tickers', 'GlobalStatistics']));
+        dispatch(
+          coinloreApi.util.invalidateTags([
+            'Ticker',
+            'Tickers',
+            'GlobalStatistics',
+          ])
+        );
       });
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -27,7 +33,7 @@ const MarketStatisticPage: React.FC =() => {
       <AppSider>
         <Tickers />
       </AppSider>
-      <AppContent>
+      <AppContent style={{ marginInlineStart: '410px', padding: '1rem 2rem' }}>
         {!coinId && <GlobalCryptoInfo />}
         {coinId && <CoinDetails />}
       </AppContent>

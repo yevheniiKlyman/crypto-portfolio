@@ -71,12 +71,17 @@ export interface Exchanges {
   [key: string]: ExchangeInExchanges;
 }
 
+export interface ExchangeInExchangesFormated extends ExchangeInExchanges {
+  volume_usd_formatted: string;
+  key: string;
+}
+
 export interface CryptoPair {
   base: string;
   quote: string;
-  volume: number;
-  price: number;
-  price_usd: number;
+  volume: number | string;
+  price: number | string;
+  price_usd: number | string;
   time: number;
 }
 

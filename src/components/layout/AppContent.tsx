@@ -2,9 +2,7 @@ import { Layout } from 'antd';
 
 const contentStyle: React.CSSProperties = {
   minHeight: 'calc(100vh - 60px)',
-  padding: '1rem 2rem',
   marginBlockStart: '60px',
-  marginInlineStart: '410px',
   maxHeight: 'calc(100vh - 60px)',
   overflow: 'scroll',
   scrollbarWidth: 'thin',
@@ -13,11 +11,12 @@ const contentStyle: React.CSSProperties = {
 
 interface AppContentProps {
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
-const AppContent: React.FC<AppContentProps> = ({ children }) => {
+const AppContent: React.FC<AppContentProps> = ({ children, style = {} }) => {
   return (
-    <Layout.Content style={contentStyle}>
+    <Layout.Content style={{ ...contentStyle, ...style }}>
       {children}
     </Layout.Content>
   );

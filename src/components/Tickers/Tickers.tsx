@@ -15,7 +15,8 @@ const Tickers: React.FC = () => {
     setTickerstStart((page - 1) * 50);
   };
 
-  const getAllCryptoChildren = (): React.ReactNode => {
+  const getAllCryptoContent
+   = (): React.ReactNode => {
     if (data) {
       return (
         <TickersTable
@@ -51,7 +52,7 @@ const Tickers: React.FC = () => {
     {
       key: '2',
       label: 'All Crypto',
-      children: getAllCryptoChildren(),
+      children: getAllCryptoContent(),
     },
   ];
 

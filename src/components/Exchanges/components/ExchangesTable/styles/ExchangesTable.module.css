@@ -1,0 +1,5 @@
+.ExchangesTable {
+  :global(.ant-table-row:hover) {
+    cursor: pointer;
+  }
+}
