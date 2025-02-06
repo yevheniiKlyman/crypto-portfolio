@@ -6,13 +6,14 @@ import PortfolioPage from './pages/PortfolioPage';
 import ExchangesPage from './pages/ExchangesPage';
 import AppHeader from './components/layout/AppHeader';
 
-const layoutStyle = {
+const layoutStyle: React.CSSProperties = {
   overflow: 'hidden',
   width: '100%',
   alignItems: 'center',
 };
 
-const bodyLayoutStyle = {
+const bodyLayoutStyle: React.CSSProperties = {
+  position: 'relative',
   maxWidth: '1600px',
   width: '100%',
   borderInline: '1px solid rgba(5, 5, 5, 0.06)',

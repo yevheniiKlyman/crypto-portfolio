@@ -26,7 +26,9 @@ const ExchangesModal: React.FC = () => {
           <>
             <p>
               <strong>URL: </strong>
-              <a href={data?.[0].url}>{data?.[0].url}</a>
+              <a href={data?.[0].url} target="_blank">
+                {data?.[0].url}
+              </a>
             </p>
             <Typography.Title
               level={4}

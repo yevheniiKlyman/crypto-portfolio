@@ -8,7 +8,7 @@ const siderStyle: React.CSSProperties = {
   scrollbarWidth: 'thin',
   scrollbarGutter: 'stable',
   scrollbarColor: '#eaeaea transparent',
-  position: 'fixed',
+  position: 'absolute',
   top: '60px',
   bottom: '0',
   left: '0',

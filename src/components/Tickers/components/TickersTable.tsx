@@ -3,16 +3,12 @@ import { Table, Tag, Typography } from 'antd';
 import type { TableProps } from 'antd';
 import { Coin } from '@store/coinlore/coinloreDataTypes';
 import { useAppDispath, useAppSelector } from '@/store';
-import {
-  selectCoinId,
-  setCoinIdAction,
-} from '@store/coinlore/coinlore.slice';
+import { selectCoinId, setCoinIdAction } from '@store/coinlore/coinlore.slice';
 import { coinloreApi } from '@store/coinlore/coinlore.api';
 
 interface TickersTableProps {
   data: Coin[];
-  coinsNum: number;
-  onPaginationPageChange: (page: number) => void;
+  pagination?: TableProps<Coin>['pagination'];
 }
 
 const columns: TableProps<Coin>['columns'] = [
@@ -52,11 +48,7 @@ const columns: TableProps<Coin>['columns'] = [
   },
 ];
 
-const TickersTable: React.FC<TickersTableProps> = ({
-  data,
-  coinsNum,
-  onPaginationPageChange,
-}) => {
+const TickersTable: React.FC<TickersTableProps> = ({ data, pagination }) => {
   const dispatch = useAppDispath();
   const coinId = useAppSelector(selectCoinId);
 
@@ -66,13 +58,7 @@ const TickersTable: React.FC<TickersTableProps> = ({
       dataSource={data}
       size="small"
       bordered
-      pagination={{
-        defaultCurrent: 1,
-        pageSize: 50,
-        total: coinsNum,
-        showSizeChanger: false,
-        onChange: onPaginationPageChange,
-      }}
+      pagination={pagination}
       onRow={(record) => ({
         onClick: () => {
           dispatch(setCoinIdAction(record.id));

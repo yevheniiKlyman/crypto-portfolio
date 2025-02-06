@@ -36,12 +36,20 @@ export const coinloreApi = createApi({
       providesTags: ['Tickers'],
     }),
 
-    getTicker: builder.query<Coin, string>({
+    getTicker: builder.query<Coin[], string>({
       query: (id) => `ticker/?id=${id}`,
-      transformResponse: (response: Coin[]) => response[0],
+      transformResponse: (response: Coin[]) => [
+        ...response.map((coin) => ({
+          ...coin,
+          key: coin.id,
+        })),
+      ],
       providesTags: (result) =>
         result
-          ? [{ type: 'Ticker' as const, id: result.id }, 'Ticker']
+          ? [
+              ...result.map(({ id }) => ({ type: 'Ticker' as const, id })),
+              'Ticker',
+            ]
           : ['Ticker'],
     }),
 
@@ -60,12 +68,14 @@ export const coinloreApi = createApi({
     getAllExchanges: builder.query<ExchangeInExchangesFormated[], void>({
       query: () => 'exchanges/',
       transformResponse: (response: Exchanges) => [
-        ...Object.values(response).filter((exchange) => exchange.volume_usd !== 0).map((exchange) => ({
-          ...exchange,
-          key: exchange.id,
-          volume_usd_formatted: formatNumber(Number(exchange.volume_usd), 2),
-        })),
-      ]
+        ...Object.values(response)
+          .filter((exchange) => exchange.volume_usd !== 0)
+          .map((exchange) => ({
+            ...exchange,
+            key: exchange.id,
+            volume_usd_formatted: formatNumber(Number(exchange.volume_usd), 2),
+          })),
+      ],
     }),
 
     getExchange: builder.query<Exchange, string>({
@@ -79,7 +89,7 @@ export const coinloreApi = createApi({
           price_usd: formatNumber(Number(pair.price_usd), 2),
           volume: formatNumber(Number(pair.volume), 2),
         })),
-      })
+      }),
     }),
   }),
 });

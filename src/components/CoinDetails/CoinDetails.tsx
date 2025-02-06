@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Typography, Flex, Spin, Alert, Button } from 'antd';
 import { useAppDispath, useAppSelector } from '@/store';
-import { LeftOutlined, StarTwoTone } from '@ant-design/icons';
+import { DeleteOutlined, LeftOutlined, StarTwoTone } from '@ant-design/icons';
 import {
   coinloreApi,
   useGetTickerQuery,
   useLazyGetMarketsForCoinQuery,
 } from '@store/coinlore/coinlore.api';
 import {
+  addToWachlistAction,
+  removeFromWachlistAction,
   selectCoinId,
+  selectWatchlist,
   setCoinIdAction,
 } from '@store/coinlore/coinlore.slice';
 import CoinDescription from './components/CoinDescription/CoinDescription';
@@ -20,6 +23,7 @@ const CoinDetails: React.FC = () => {
   const coinId = useAppSelector(selectCoinId);
   const dispatch = useAppDispath();
   const [showMarkets, setShowMarkets] = useState(false);
+  const watchlist = useAppSelector(selectWatchlist);
 
   const [
     triggerMarketsLoad,
@@ -27,7 +31,7 @@ const CoinDetails: React.FC = () => {
   ] = useLazyGetMarketsForCoinQuery();
 
   const {
-    data: coinData,
+    data: coinDataArr,
     error,
     isLoading,
     isFetching,
@@ -35,6 +39,8 @@ const CoinDetails: React.FC = () => {
     pollingInterval: 10 * 60 * 1000,
     skipPollingIfUnfocused: true,
   });
+
+  const coinData = coinDataArr?.[0];
 
   useEffect(() => {
     setShowMarkets(false);
@@ -72,9 +78,25 @@ const CoinDetails: React.FC = () => {
             style={{ marginTop: '1.5rem' }}
             className={isFetching ? 'blur-loading' : ''}
           >
-            <Button icon={<StarTwoTone />} variant="outlined" color="primary">
-              Add to Watchlist
-            </Button>
+            {watchlist.includes(coinData.id) ? (
+              <Button
+                icon={<DeleteOutlined twoToneColor="danger" />}
+                variant="outlined"
+                color="danger"
+                onClick={() => dispatch(removeFromWachlistAction(coinData.id))}
+              >
+                Remove from Watchlist
+              </Button>
+            ) : (
+              <Button
+                icon={<StarTwoTone />}
+                variant="outlined"
+                color="primary"
+                onClick={() => dispatch(addToWachlistAction(coinData.id))}
+              >
+                Add to Watchlist
+              </Button>
+            )}
             {(!showMarkets || isMarketsFetching || isMarketsError) && (
               <Button
                 variant="solid"

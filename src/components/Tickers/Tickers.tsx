@@ -1,8 +1,13 @@
 import { useState } from 'react';
-import { Alert, Collapse, CollapseProps, Flex, Spin } from 'antd';
-import { useGetTickersQuery } from '@store/coinlore/coinlore.api';
+import { Alert, Collapse, CollapseProps, Flex, Spin, Typography } from 'antd';
+import {
+  useGetTickerQuery,
+  useGetTickersQuery,
+} from '@store/coinlore/coinlore.api';
 import TickersTable from './components/TickersTable';
 import classes from './styles/Tickers.module.css';
+import { useAppSelector } from '@/store';
+import { selectWatchlist } from '@/store/coinlore/coinlore.slice';
 
 const Tickers: React.FC = () => {
   const [tickerstStart, setTickerstStart] = useState(0);
@@ -11,18 +16,33 @@ const Tickers: React.FC = () => {
     skipPollingIfUnfocused: true,
   });
 
+  const watchlist = useAppSelector(selectWatchlist);
+  const {
+    data: watchlistData,
+    error: watchlistError,
+    isLoading: watchlistLoading,
+  } = useGetTickerQuery(watchlist.join(','), {
+    pollingInterval: 3 * 60 * 1000,
+    skipPollingIfUnfocused: true,
+    skip: !watchlist.length,
+  });
+
   const onPaginationPageChange = (page: number) => {
     setTickerstStart((page - 1) * 50);
   };
 
-  const getAllCryptoContent
-   = (): React.ReactNode => {
+  const getAllCryptoContent = (): React.ReactNode => {
     if (data) {
       return (
         <TickersTable
           data={data.data}
-          coinsNum={data.info.coins_num}
-          onPaginationPageChange={onPaginationPageChange}
+          pagination={{
+            defaultCurrent: 1,
+            pageSize: 50,
+            total: data.info.coins_num,
+            showSizeChanger: false,
+            onChange: onPaginationPageChange,
+          }}
         />
       );
     } else if (error) {
@@ -43,11 +63,37 @@ const Tickers: React.FC = () => {
     return null;
   };
 
+  const getWatchlistContent = (): React.ReactNode => {
+    if (watchlistData && watchlist.length) {
+      return <TickersTable data={watchlistData} pagination={false} />;
+    } else if (watchlistError) {
+      return (
+        <Alert
+          message="Something went wrong. Please try again later..."
+          type="error"
+        />
+      );
+    } else if (watchlistLoading) {
+      return (
+        <Flex justify="center">
+          <Spin size="large" />
+        </Flex>
+      );
+    }
+
+    return (
+      <Typography.Text>
+        Your watchlist is currently empty. Add some coins to keep track of your
+        favorites!
+      </Typography.Text>
+    );
+  };
+
   const items: CollapseProps['items'] = [
     {
       key: '1',
       label: 'Watchlist',
-      children: <p>{'text1'}</p>,
+      children: getWatchlistContent(),
     },
     {
       key: '2',
@@ -57,7 +103,11 @@ const Tickers: React.FC = () => {
   ];
 
   return (
-    <Collapse items={items} defaultActiveKey={2} className={classes.Tickers} />
+    <Collapse
+      items={items}
+      defaultActiveKey={['1', '2']}
+      className={classes.Tickers}
+    />
   );
 };
 
