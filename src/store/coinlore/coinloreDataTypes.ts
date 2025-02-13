@@ -19,14 +19,6 @@ export interface GlobalCryptoInfoItem {
   tag?: boolean;
 }
 
-export interface Tickers {
-  data: Coin[];
-  info: {
-    coins_num: number;
-    time: number;
-  };
-}
-
 export interface Coin {
   id: string;
   symbol: string;
@@ -44,6 +36,28 @@ export interface Coin {
   csupply: string;
   tsupply: string;
   msupply: string;
+}
+
+export interface Tickers {
+  data: Coin[];
+  info: {
+    coins_num: number;
+    time: number;
+  };
+}
+
+export interface CoinFormated extends Coin {
+  key: string;
+  value: string;
+  label: string;
+}
+
+export interface TickersFormated {
+  data: CoinFormated[];
+  info: {
+    coins_num: number;
+    time: number;
+  };
 }
 
 export interface MarketForCoin {

@@ -16,6 +16,7 @@ const columns: TableProps<ExchangeInExchanges>['columns'] = [
     dataIndex: 'name',
     key: 'name',
     sorter: (a, b) => a.name.localeCompare(b.name),
+    render: (name) => <span style={{ fontWeight: '500' }}>{name}</span>,
   },
   {
     title: 'Total trading volume ($)',

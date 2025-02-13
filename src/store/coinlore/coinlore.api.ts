@@ -8,6 +8,7 @@ import type {
   GlobalCryptoInfoItem,
   Coin,
   ExchangeInExchangesFormated,
+  TickersFormated,
 } from './coinloreDataTypes';
 import { transformGlobalCryptoInfoResponse } from './coinloreUtils';
 import { formatNumber } from '@utils/formatNumber';
@@ -24,13 +25,15 @@ export const coinloreApi = createApi({
       providesTags: ['GlobalStatistics'],
     }),
 
-    getTickers: builder.query<Tickers, number | void>({
-      query: (start = 0) => `tickers/?start=${start}&limit=50`,
+    getTickers: builder.query<TickersFormated, { start: number; limit: number }>({
+      query: ({ start, limit }) => `tickers/?start=${start}&limit=${limit}`,
       transformResponse: (response: Tickers) => ({
         ...response,
         data: response.data.map((coin) => ({
           ...coin,
           key: coin.id,
+          value: coin.id,
+          label: `(${coin.symbol}) ${coin.name}`,
         })),
       }),
       providesTags: ['Tickers'],

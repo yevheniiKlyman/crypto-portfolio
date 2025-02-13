@@ -11,10 +11,13 @@ import { selectWatchlist } from '@/store/coinlore/coinlore.slice';
 
 const Tickers: React.FC = () => {
   const [tickerstStart, setTickerstStart] = useState(0);
-  const { data, error, isLoading } = useGetTickersQuery(tickerstStart, {
-    pollingInterval: 3 * 60 * 1000,
-    skipPollingIfUnfocused: true,
-  });
+  const { data, error, isLoading } = useGetTickersQuery(
+    { start: tickerstStart, limit: 50 },
+    {
+      pollingInterval: 3 * 60 * 1000,
+      skipPollingIfUnfocused: true,
+    }
+  );
 
   const watchlist = useAppSelector(selectWatchlist);
   const {
