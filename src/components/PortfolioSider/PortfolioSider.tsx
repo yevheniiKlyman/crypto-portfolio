@@ -19,17 +19,19 @@ import Decimal from 'decimal.js';
 
 export const PortfolioSider: React.FC = () => {
   const assets = useAppSelector(selectAssets);
-  const assetsIds = assets.map((asset) => asset.id).join(',');
+  const assetsIds = assets.assets.map((asset) => asset.id).join(',');
   const { data, error, isLoading } = useGetTickerQuery(assetsIds, {
     pollingInterval: 3 * 60 * 1000,
     skipPollingIfUnfocused: true,
-    skip: !assets.length,
+    skip: !assets.totalPrice,
   });
 
   const assetsCardData = useMemo(() => {
     const result = [];
 
-    for (const asset of assets.filter((asset) => asset.totalAmount > 0)) {
+    for (const asset of assets.assets.filter(
+      (asset) => asset.totalAmount > 0
+    )) {
       const ticker = data?.find((item) => item.id === asset.id);
 
       if (!ticker) continue;
@@ -57,9 +59,30 @@ export const PortfolioSider: React.FC = () => {
     return result;
   }, [data, assets]);
 
-  return (
-    <AppSider>
-      {!isLoading && !error && !assetsCardData?.length && (
+  if (isLoading) {
+    return (
+      <AppSider>
+        <Flex justify="center" style={{ marginTop: '2rem' }}>
+          <Spin size="large" />
+        </Flex>
+      </AppSider>
+    );
+  }
+
+  if (error) {
+    return (
+      <AppSider>
+        <Alert
+          message="Something went wrong. Please try again later..."
+          type="error"
+        />
+      </AppSider>
+    );
+  }
+
+  if (!assetsCardData?.length) {
+    return (
+      <AppSider>
         <Card variant="borderless" style={{ marginTop: '0.5rem' }}>
           <Empty />
           <Typography.Title
@@ -74,14 +97,22 @@ export const PortfolioSider: React.FC = () => {
             Time to add your first asset!
           </Typography.Paragraph>
         </Card>
-      )}
-      {!isLoading && !error && assetsCardData?.length && (
+      </AppSider>
+    );
+  }
+
+  return (
+    assetsCardData?.length && (
+      <AppSider>
         <List
           itemLayout="vertical"
           dataSource={assetsCardData}
           size="small"
           renderItem={(asset) => (
-            <List.Item key={asset.key} style={{ borderBlockEnd: 'none', paddingInlineEnd: '3px' }}>
+            <List.Item
+              key={asset.key}
+              style={{ borderBlockEnd: 'none', paddingInlineEnd: '3px' }}
+            >
               <Card variant="borderless">
                 <Statistic
                   title={
@@ -147,19 +178,8 @@ export const PortfolioSider: React.FC = () => {
             </List.Item>
           )}
         />
-      )}
-      {isLoading && (
-        <Flex justify="center" style={{ marginTop: '2rem' }}>
-          <Spin size="large" />
-        </Flex>
-      )}
-      {error && (
-        <Alert
-          message="Something went wrong. Please try again later..."
-          type="error"
-        />
-      )}
-    </AppSider>
+      </AppSider>
+    )
   );
 };
 

@@ -7,7 +7,10 @@ import { addTransaction, LS_PORTFOLIO_KEY } from './portfolioUtils';
 const initialState: PortfolioState = {
   isDrawerOpen: false,
   showSuccessTransaction: false,
-  assets: storage.get(LS_PORTFOLIO_KEY) || [],
+  assets: storage.get(LS_PORTFOLIO_KEY) || {
+    totalPrice: 0,
+    assets: [],
+  },
 };
 
 const portfolioSlice = createSlice({
