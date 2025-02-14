@@ -24,14 +24,7 @@ const GlobalCryptoInfo: React.FC = () => {
           <InfoCircleTwoTone style={{ fontSize: '32px' }} />
         </Tooltip>
       </Typography.Title>
-
-      {isLoading && (
-        <Flex justify="center" style={{ paddingTop: '2rem' }}>
-          <Spin size="large" />
-        </Flex>
-      )}
-
-      {!isLoading && data && (
+      {!isLoading && !error && data && (
         <Descriptions column={1}>
           {data.map((item) => {
             return (
@@ -47,6 +40,12 @@ const GlobalCryptoInfo: React.FC = () => {
             );
           })}
         </Descriptions>
+      )}
+
+      {isLoading && (
+        <Flex justify="center" style={{ paddingTop: '2rem' }}>
+          <Spin size="large" />
+        </Flex>
       )}
 
       {error && (

@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'antd';
 import type { TableProps } from 'antd';
 import { ExchangeInExchanges } from '@store/coinlore/coinloreDataTypes';
-import { useAppDispath } from '@/store';
+import { useAppDispatch } from '@/store';
 import { setExchangeIdAction } from '@store/coinlore/coinlore.slice';
 import classes from './styles/ExchangesTable.module.css';
 
@@ -41,7 +41,7 @@ const columns: TableProps<ExchangeInExchanges>['columns'] = [
 ];
 
 const ExchangesTable: React.FC<ExchangesTableProps> = ({ data }) => {
-  const dispatch = useAppDispath();
+  const dispatch = useAppDispatch();
 
   return (
     <Table<ExchangeInExchanges>

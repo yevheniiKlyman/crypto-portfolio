@@ -4,13 +4,13 @@ import AppContent from '@components/layout/AppContent';
 import GlobalCryptoInfo from '@components/GlobalCryptoInfo';
 import Tickers from '@components/Tickers/Tickers';
 import CoinDetails from '@components/CoinDetails/CoinDetails';
-import { useAppDispath, useAppSelector } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store';
 import { selectCoinId, setCoinIdAction } from '@store/coinlore/coinlore.slice';
 import { coinloreApi } from '@/store/coinlore/coinlore.api';
 
 const MarketStatisticPage: React.FC = () => {
   const coinId = useAppSelector(selectCoinId);
-  const dispatch = useAppDispath();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     return () => {

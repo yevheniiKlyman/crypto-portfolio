@@ -43,22 +43,27 @@ export const addTransaction = (
   state: PortfolioState,
   action: PayloadAction<Transaction>
 ) => {
-  if (!state.assets.find((asset) => asset.id === action.payload.assetId)) {
+  if (!state.assets.find((asset) => asset.id === action.payload.asset.value)) {
     state.assets.push({
-      id: action.payload.assetId,
-      key: action.payload.assetId,
-      totalAmount: 0,
+      id: action.payload.asset.value,
+      key: action.payload.asset.value,
       averagePrice: 0,
+      totalPrice: 0,
+      totalAmount: 0,
       transactions: [],
     });
   }
 
   state.assets = state.assets.map((asset) => {
-    if (asset.id === action.payload.assetId) {
+    if (asset.id === action.payload.asset.value) {
+      const totalAmount = calculateTotalAmount(asset.totalAmount, action.payload);
+      const averagePrice = calculateAveragePrice(asset, action.payload);
+
       return {
         ...asset,
-        totalAmount: calculateTotalAmount(asset.totalAmount, action.payload),
-        averagePrice: calculateAveragePrice(asset, action.payload),
+        totalAmount,
+        averagePrice,
+        totalPrice: new Decimal(totalAmount).mul(averagePrice).toNumber(),
         transactions: [...asset.transactions, action.payload],
       };
     }

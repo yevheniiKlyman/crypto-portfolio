@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Typography, Flex, Spin, Alert, Button } from 'antd';
-import { useAppDispath, useAppSelector } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store';
 import { DeleteOutlined, LeftOutlined, StarTwoTone } from '@ant-design/icons';
 import {
   coinloreApi,
@@ -21,7 +21,7 @@ const { Title } = Typography;
 
 const CoinDetails: React.FC = () => {
   const coinId = useAppSelector(selectCoinId);
-  const dispatch = useAppDispath();
+  const dispatch = useAppDispatch();
   const [showMarkets, setShowMarkets] = useState(false);
   const watchlist = useAppSelector(selectWatchlist);
 

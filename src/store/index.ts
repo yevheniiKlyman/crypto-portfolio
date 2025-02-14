@@ -14,10 +14,9 @@ export const store = configureStore({
     getDefaultMiddleware().concat(coinloreApi.middleware),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AppState = any;
+export type AppState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export const useAppSelector = useSelector.withTypes<AppState>();
-export const useAppDispath = useDispatch.withTypes<AppDispatch>();
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppStore = useStore.withTypes<typeof store>();

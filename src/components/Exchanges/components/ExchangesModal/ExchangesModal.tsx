@@ -1,5 +1,5 @@
 import { Alert, Modal, Typography } from 'antd';
-import { useAppDispath, useAppSelector } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store';
 import {
   selectExchangeId,
   setExchangeIdAction,
@@ -10,7 +10,7 @@ import CryptoPairsTable from './components/CryptoPairsTable';
 const ExchangesModal: React.FC = () => {
   const exchangeId = useAppSelector(selectExchangeId);
   const { data, error, isLoading } = useGetExchangeQuery(exchangeId);
-  const dispatch = useAppDispath();
+  const dispatch = useAppDispatch();
 
   return (
     <>

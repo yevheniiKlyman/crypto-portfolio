@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Tag, Typography } from 'antd';
 import type { TableProps } from 'antd';
 import { Coin } from '@store/coinlore/coinloreDataTypes';
-import { useAppDispath, useAppSelector } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store';
 import { selectCoinId, setCoinIdAction } from '@store/coinlore/coinlore.slice';
 import { coinloreApi } from '@store/coinlore/coinlore.api';
 
@@ -49,7 +49,7 @@ const columns: TableProps<Coin>['columns'] = [
 ];
 
 const TickersTable: React.FC<TickersTableProps> = ({ data, pagination }) => {
-  const dispatch = useAppDispath();
+  const dispatch = useAppDispatch();
   const coinId = useAppSelector(selectCoinId);
 
   return (

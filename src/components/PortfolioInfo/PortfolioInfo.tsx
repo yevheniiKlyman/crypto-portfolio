@@ -1,11 +1,11 @@
-import { useAppDispath } from '@/store';
+import { useAppDispatch } from '@/store';
 import { setIsDrawerOpenAction } from '@/store/portfolio/portfolio.slice';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import TransactionDrawer from './components/TransactionDrawer';
 
 const PortfolioInfo: React.FC = () => {
-  const dispatch = useAppDispath();
+  const dispatch = useAppDispatch();
 
   return (
     <>
