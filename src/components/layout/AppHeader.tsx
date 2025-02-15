@@ -14,7 +14,7 @@ const headerStyle: React.CSSProperties = {
   height: 60,
   padding: 0, 
   backgroundColor: '#14161a',
-  background: 'linear-gradient(135deg, rgba(0,52,255,1) 0%, rgba(22,119,255,1) 100%)',
+  background: 'linear-gradient(135deg, rgb(33 175 72) 0%, rgb(32 97 188) 100%)',
 };
 
 const AppHeader: React.FC = () => {

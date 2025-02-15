@@ -6,16 +6,15 @@ import {
   Flex,
   List,
   Spin,
-  Statistic,
   Tag,
   Typography,
 } from 'antd';
-import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import Decimal from 'decimal.js';
 import { useAppSelector } from '@/store';
 import { selectAssets } from '@/store/portfolio/portfolio.slice';
 import AppSider from '../layout/AppSider';
 import { useGetTickerQuery } from '@/store/coinlore/coinlore.api';
-import Decimal from 'decimal.js';
+import AppStatistic from '../ui/AppStatistic';
 
 export const PortfolioSider: React.FC = () => {
   const assets = useAppSelector(selectAssets);
@@ -114,26 +113,7 @@ export const PortfolioSider: React.FC = () => {
               style={{ borderBlockEnd: 'none', paddingInlineEnd: '3px' }}
             >
               <Card variant="borderless">
-                <Statistic
-                  title={
-                    <span style={{ fontSize: '16px', fontWeight: '500' }}>
-                      {asset.name}
-                    </span>
-                  }
-                  value={asset.currentTotalPrice}
-                  precision={2}
-                  valueStyle={{
-                    color: asset.usdDiff >= 0 ? '#3f8600' : '#cf1322',
-                  }}
-                  prefix={
-                    asset.usdDiff >= 0 ? (
-                      <ArrowUpOutlined />
-                    ) : (
-                      <ArrowDownOutlined />
-                    )
-                  }
-                  suffix="$"
-                />
+                <AppStatistic asset={asset} titleStyle={{ fontSize: '16px', fontWeight: '500' }} />  
                 <List
                   size="small"
                   style={{

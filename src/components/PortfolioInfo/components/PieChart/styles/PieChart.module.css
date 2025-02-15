@@ -1,0 +1,5 @@
+.pieChart {
+  :global(.canvasjs-chart-toolbar > button) {
+    background-color: transparent !important;
+  }
+}

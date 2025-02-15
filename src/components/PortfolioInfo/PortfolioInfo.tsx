@@ -1,21 +1,10 @@
-import { useAppDispatch } from '@/store';
-import { setIsDrawerOpenAction } from '@/store/portfolio/portfolio.slice';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
 import TransactionDrawer from './components/TransactionDrawer';
+import PortfolioGeneralInfo from './components/PortfolioGeneralInfo';
 
 const PortfolioInfo: React.FC = () => {
-  const dispatch = useAppDispatch();
-
   return (
     <>
-      <Button
-        type="primary"
-        onClick={() => dispatch(setIsDrawerOpenAction(true))}
-        icon={<PlusOutlined />}
-      >
-        Add transaction
-      </Button>
+      <PortfolioGeneralInfo />
       <TransactionDrawer />
     </>
   );
