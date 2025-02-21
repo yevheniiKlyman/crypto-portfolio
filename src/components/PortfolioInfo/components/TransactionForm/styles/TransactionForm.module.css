@@ -1,0 +1,11 @@
+.amountItem {
+  :global(.ant-form-item-control-input-content) {
+    display: flex;
+    align-items: flex-end;
+
+    & > :global(.ant-form-item) {
+      margin-block-end: 0;
+      flex-grow: 1;
+    }
+  }
+}

@@ -5,17 +5,16 @@ import { Asset, PortfolioState, Transaction } from './portfolioDataTypes';
 
 export const LS_PORTFOLIO_KEY = 'pf_assets';
 
-const calculateTotal = (
+const calculateTotalAmount = (
   currentTotal: number,
-  transactionValue: number,
-  transactionType: 'buy' | 'sell',
+  transaction: Transaction,
 ): number => {
   let total = 0;
 
-  if (transactionType === 'buy') {
-    total = new Decimal(currentTotal).add(transactionValue).toNumber();
+  if (transaction.transactionType === 'buy') {
+    total = new Decimal(currentTotal).add(transaction.amount).toNumber();
   } else {
-    total = new Decimal(currentTotal).sub(transactionValue).toNumber();
+    total = new Decimal(currentTotal).sub(transaction.amount).toNumber();
   }
 
   if (total < 0) {
@@ -40,6 +39,12 @@ const calculateAssetAveragePrice = (
   return asset.averagePrice;
 };
 
+const calculatePortfolioTotalPrice = (assets: Asset[]): number => {
+  return assets.reduce((total, asset) => {
+    return new Decimal(total).add(asset.totalPrice).toNumber();
+  }, 0);
+};
+
 export const addTransaction = (
   state: PortfolioState,
   action: PayloadAction<Transaction>
@@ -55,24 +60,26 @@ export const addTransaction = (
     });
   }
 
+  const assets = state.assets.assets.map((asset) => {
+    if (asset.id === action.payload.asset.value) {
+      const totalAmount = calculateTotalAmount(asset.totalAmount, action.payload);
+      const averagePrice = calculateAssetAveragePrice(asset, action.payload);
+
+      return {
+        ...asset,
+        totalAmount,
+        averagePrice,
+        totalPrice: new Decimal(totalAmount).mul(averagePrice).toNumber(),
+        transactions: [...asset.transactions, action.payload],
+      };
+    }
+    return asset;
+  });
+
   state.assets = {
     ...state.assets,
-    totalPrice: calculateTotal(state.assets.totalPrice, action.payload.total, action.payload.transactionType),
-    assets: state.assets.assets.map((asset) => {
-      if (asset.id === action.payload.asset.value) {
-        const totalAmount = calculateTotal(asset.totalAmount, action.payload.amount, action.payload.transactionType);
-        const averagePrice = calculateAssetAveragePrice(asset, action.payload);
-  
-        return {
-          ...asset,
-          totalAmount,
-          averagePrice,
-          totalPrice: new Decimal(totalAmount).mul(averagePrice).toNumber(),
-          transactions: [...asset.transactions, action.payload],
-        };
-      }
-      return asset;
-    }),
+    totalPrice: calculatePortfolioTotalPrice(assets),
+    assets,
   };
 
   storage.set(LS_PORTFOLIO_KEY, state.assets);

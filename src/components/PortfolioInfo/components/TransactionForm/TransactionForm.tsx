@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Button,
   Form,
@@ -14,25 +15,33 @@ import { useGetTickersQuery } from '@/store/coinlore/coinlore.api';
 import { useAppDispatch, useAppSelector } from '@/store';
 import {
   addTransactionAction,
+  selectAssets,
   selectIsDrawerOpen,
   selectShowSuccessTransaction,
   setShowSuccessTransactionAction,
 } from '@/store/portfolio/portfolio.slice';
 import {
+  Asset,
   Transaction,
   TransactionRaw,
 } from '@/store/portfolio/portfolioDataTypes';
-import { useEffect, useState } from 'react';
-import TransactionSuccess from './TransactionSuccess';
+import TransactionSuccess from '../TransactionSuccess';
+import classes from './styles/TransactionForm.module.css';
 
 const { Option } = Select;
 
 const TransactionForm: React.FC = () => {
   const [form] = Form.useForm<TransactionRaw>();
   const [transaction, setTransaction] = useState<Transaction | null>(null);
+  const [maxAmount, setMaxAmount] = useState(0);
+  const [isSellDisabled, setIsSellDisabled] = useState(true);
+  const [selectedAsset, setSelectedAsset] = useState<Asset | undefined>(
+    undefined
+  );
   const dispatch = useAppDispatch();
   const showSuccessTransaction = useAppSelector(selectShowSuccessTransaction);
   const isDrawerOpen = useAppSelector(selectIsDrawerOpen);
+  const assets = useAppSelector(selectAssets);
   const { data, error, isLoading } = useGetTickersQuery({
     start: 0,
     limit: 100,
@@ -40,9 +49,16 @@ const TransactionForm: React.FC = () => {
 
   const transactionTypeSelector = (
     <Form.Item name="transactionType" noStyle>
-      <Select style={{ width: 70 }}>
+      <Select
+        style={{ width: 70 }}
+        onChange={(val) => {
+          setMaxAmount(val === 'buy' ? 0 : selectedAsset?.totalAmount || 0);
+        }}
+      >
         <Option value="buy">Buy</Option>
-        <Option value="sell">Sell</Option>
+        <Option value="sell" disabled={isSellDisabled}>
+          Sell
+        </Option>
       </Select>
     </Form.Item>
   );
@@ -58,7 +74,11 @@ const TransactionForm: React.FC = () => {
   };
 
   const onSelect = (value: { value: string; label: string }) => {
-    const selectedCoin = data?.data.find((item) => item.id === value.value);
+    const selectedTicker = data?.data.find((item) => item.id === value.value);
+    const selectedAsset = assets.assets.find(
+      (asset) => asset.id === value.value
+    );
+    setSelectedAsset(selectedAsset);
 
     form.resetFields([
       'amount',
@@ -68,11 +88,13 @@ const TransactionForm: React.FC = () => {
       'transactionType',
     ]);
 
-    if (selectedCoin) {
+    if (selectedTicker) {
       form.setFieldsValue({
-        price: Number(selectedCoin.price_usd),
+        price: Number(selectedTicker.price_usd),
         transactionType: 'buy',
       });
+
+      setIsSellDisabled(!selectedAsset?.totalAmount);
     }
   };
 
@@ -91,6 +113,9 @@ const TransactionForm: React.FC = () => {
   useEffect(() => {
     if (!isDrawerOpen) {
       form.resetFields();
+      setMaxAmount(0);
+      setIsSellDisabled(true);
+      setSelectedAsset(undefined);
     }
   }, [isDrawerOpen, form]);
 
@@ -139,19 +164,32 @@ const TransactionForm: React.FC = () => {
           />
         </Form.Item>
 
-        <Form.Item
-          name="amount"
-          label="Amount"
-          rules={[
-            { required: true, message: 'Please enter the number of coins' },
-          ]}
-        >
-          <InputNumber
-            addonAfter={transactionTypeSelector}
-            placeholder="Enter amount"
-            style={{ width: '100%' }}
-            onChange={calculateTotal}
-          />
+        <Form.Item className={classes.amountItem}>
+          <Form.Item
+            name="amount"
+            label="Amount"
+            rules={[
+              { required: true, message: 'Please enter the number of coins' },
+            ]}
+          >
+            <InputNumber
+              addonAfter={transactionTypeSelector}
+              placeholder="Enter amount"
+              style={{ width: '100%' }}
+              onChange={calculateTotal}
+              {...(maxAmount > 0 && { max: maxAmount })}
+            />
+          </Form.Item>
+          {maxAmount ? (
+            <Button
+              style={{ marginInlineStart: '2px' }}
+              onClick={() => form.setFieldsValue({ amount: maxAmount })}
+            >
+              Max
+            </Button>
+          ) : (
+            ''
+          )}
         </Form.Item>
 
         <Form.Item

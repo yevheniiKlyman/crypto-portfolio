@@ -1,18 +1,15 @@
 import { useMemo } from 'react';
-import Decimal from 'decimal.js';
-import { Alert, Button, Divider, Flex, Spin, Tag, Typography } from 'antd';
-import { useAppDispatch, useAppSelector } from '@/store';
-import {
-  selectAssets,
-  setIsDrawerOpenAction,
-} from '@/store/portfolio/portfolio.slice';
+import { Alert, Divider, Flex, Spin, Tag, Typography, Image } from 'antd';
+import { useAppSelector } from '@/store';
+import { selectAssets } from '@/store/portfolio/portfolio.slice';
 import AppStatistic from '@/components/ui/AppStatistic';
-import { PlusOutlined } from '@ant-design/icons';
 import { useGetTickerQuery } from '@/store/coinlore/coinlore.api';
 import PieChart from './PieChart/PieChart';
+import { calculatePortfolioCurrentData } from '../utils/calculatePortfolioCurrentData';
+import emptyPortfolioImg from '@/assets/images/empty-portfolio.jpg';
+import AddTransactionButton from '@/components/ui/AddTransactionButton';
 
 const PortfolioGeneralInfo: React.FC = () => {
-  const dispatch = useAppDispatch();
   const assets = useAppSelector(selectAssets);
   const assetsIds = assets.assets.map((asset) => asset.id).join(',');
   const { data, error, isLoading } = useGetTickerQuery(assetsIds, {
@@ -22,50 +19,7 @@ const PortfolioGeneralInfo: React.FC = () => {
   });
 
   const portfolioCurrentData = useMemo(() => {
-    const currentAssetsTotalPrices = [];
-
-    for (const asset of assets.assets.filter(
-      (asset) => asset.totalAmount > 0
-    )) {
-      const ticker = data?.find((item) => item.id === asset.id);
-
-      if (!ticker) continue;
-
-      currentAssetsTotalPrices.push({
-        label: `(${ticker.symbol}) ${ticker.name}`,
-        price: new Decimal(ticker.price_usd).mul(asset.totalAmount).toNumber(),
-      });
-    }
-
-    const portfolioCurrentTotalPrice = currentAssetsTotalPrices.reduce(
-      (acc, asset) => {
-        return new Decimal(acc).add(asset.price).toNumber();
-      },
-      0
-    );
-
-    const priceDiffUsd = new Decimal(portfolioCurrentTotalPrice)
-      .sub(assets.totalPrice)
-      .toNumber();
-
-    return {
-      totalPrice: portfolioCurrentTotalPrice,
-      priceDiffUsd,
-      priceDiffPrecentage: new Decimal(priceDiffUsd)
-        .div(assets.totalPrice)
-        .mul(100)
-        .toFixed(2),
-      chartData: currentAssetsTotalPrices.map((item) => ({
-        label: item.label,
-        exploded: true,
-        y: Number(
-          new Decimal(item.price)
-            .div(portfolioCurrentTotalPrice)
-            .mul(100)
-            .toFixed(2)
-        ),
-      })),
-    };
+    return calculatePortfolioCurrentData(assets, data);
   }, [data, assets]);
 
   if (isLoading) {
@@ -85,6 +39,24 @@ const PortfolioGeneralInfo: React.FC = () => {
     );
   }
 
+  if (!assets.totalPrice) {
+    return (
+      <Flex align="center" vertical>
+        <Typography.Title level={2} style={{ textAlign: 'center' }}>
+          Track the status of your assets. And watch your portfolio flourish!
+        </Typography.Title>
+        <AddTransactionButton style={{ marginBlock: '1rem' }}>
+          Add Asset
+        </AddTransactionButton>
+        <Image
+          preview={false}
+          src={emptyPortfolioImg}
+          style={{ maxWidth: '700px' }}
+        />
+      </Flex>
+    );
+  }
+
   return (
     <Flex vertical>
       <Flex justify="space-between">
@@ -94,15 +66,9 @@ const PortfolioGeneralInfo: React.FC = () => {
             currentTotalPrice: portfolioCurrentData.totalPrice,
             usdDiff: portfolioCurrentData.priceDiffUsd,
           }}
-          titleStyle={{ fontWeight: 500, fontSize: 24, color: '#000000e0' }}
+          titleStyle={{ fontWeight: 500, fontSize: 26, color: '#000000e0' }}
         />
-        <Button
-          type="primary"
-          onClick={() => dispatch(setIsDrawerOpenAction(true))}
-          icon={<PlusOutlined />}
-        >
-          Add transaction
-        </Button>
+        <AddTransactionButton />
       </Flex>
       <Typography.Paragraph style={{ marginBlockStart: '1rem' }}>
         <span
@@ -120,8 +86,12 @@ const PortfolioGeneralInfo: React.FC = () => {
         </Typography.Text>
       </Typography.Paragraph>
       <Divider style={{ marginBlockStart: '5px' }} />
-      <PieChart dataPoints={portfolioCurrentData.chartData} />
-      <Divider />
+      {portfolioCurrentData.chartData.length ? (
+        <>
+          <PieChart dataPoints={portfolioCurrentData.chartData} />
+          <Divider />
+        </>
+      ) : null}
     </Flex>
   );
 };

@@ -5,7 +5,7 @@ import {
   setIsDrawerOpenAction,
   setShowSuccessTransactionAction,
 } from '@/store/portfolio/portfolio.slice';
-import TransactionForm from './TransactionForm';
+import TransactionForm from './TransactionForm/TransactionForm';
 
 const TransactionDrawer: React.FC = () => {
   const dispatch = useAppDispatch();

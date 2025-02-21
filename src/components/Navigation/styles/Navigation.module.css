@@ -1,5 +1,26 @@
 .navigation {
+  :global(.ant-menu-item) {
+    color: #fff !important;
+    --underscore-color: transparent;
+
+    &:before {
+      content: '';
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      width: calc(100% - 32px);
+      height: 2px;
+      background-color: var(--underscore-color);
+      transition: background-color 0.3s ease-in-out;
+    }
+  }
+
   :global(.ant-menu-item-selected) {
     background-color: transparent !important;
+  }
+
+  :global(.ant-menu-item-selected),
+  :global(.ant-menu-item-active) {
+    --underscore-color: #fff;
   }
 }

@@ -15,6 +15,7 @@ import { selectAssets } from '@/store/portfolio/portfolio.slice';
 import AppSider from '../layout/AppSider';
 import { useGetTickerQuery } from '@/store/coinlore/coinlore.api';
 import AppStatistic from '../ui/AppStatistic';
+import AddTransactionButton from '../ui/AddTransactionButton';
 
 export const PortfolioSider: React.FC = () => {
   const assets = useAppSelector(selectAssets);
@@ -93,7 +94,15 @@ export const PortfolioSider: React.FC = () => {
           <Typography.Paragraph
             style={{ textAlign: 'center', fontSize: '16px' }}
           >
-            Time to add your first asset!
+            Time to
+            <AddTransactionButton
+              color="primary"
+              type="link"
+              icon={false}
+              style={{ fontSize: '16px', paddingInlineStart: '5px' }}
+            >
+              add your first asset!
+            </AddTransactionButton>
           </Typography.Paragraph>
         </Card>
       </AppSider>
