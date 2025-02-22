@@ -15,6 +15,7 @@ const TransactionDrawer: React.FC = () => {
     <Drawer
       title="New transaction"
       width={400}
+      destroyOnClose
       onClose={() => {
         dispatch(setIsDrawerOpenAction(false));
         setTimeout(() => {

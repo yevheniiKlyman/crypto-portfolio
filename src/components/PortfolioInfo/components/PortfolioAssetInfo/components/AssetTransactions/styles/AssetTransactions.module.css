@@ -1,0 +1,7 @@
+.table {
+  :global(.ant-table) {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #eaeaea transparent;
+  }
+}

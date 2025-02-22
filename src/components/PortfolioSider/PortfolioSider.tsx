@@ -1,23 +1,18 @@
 import { useMemo } from 'react';
-import {
-  Alert,
-  Card,
-  Empty,
-  Flex,
-  List,
-  Spin,
-  Tag,
-  Typography,
-} from 'antd';
+import { Alert, Card, Empty, Flex, List, Spin, Tag, Typography } from 'antd';
 import Decimal from 'decimal.js';
-import { useAppSelector } from '@/store';
-import { selectAssets } from '@/store/portfolio/portfolio.slice';
+import { useAppSelector, useAppDispatch } from '@/store';
+import {
+  selectAssets,
+  setSelectedAssetAction,
+} from '@/store/portfolio/portfolio.slice';
 import AppSider from '../layout/AppSider';
-import { useGetTickerQuery } from '@/store/coinlore/coinlore.api';
+import { coinloreApi, useGetTickerQuery } from '@/store/coinlore/coinlore.api';
 import AppStatistic from '../ui/AppStatistic';
 import AddTransactionButton from '../ui/AddTransactionButton';
 
 export const PortfolioSider: React.FC = () => {
+  const dispatch = useAppDispatch();
   const assets = useAppSelector(selectAssets);
   const assetsIds = assets.assets.map((asset) => asset.id).join(',');
   const { data, error, isLoading } = useGetTickerQuery(assetsIds, {
@@ -58,6 +53,16 @@ export const PortfolioSider: React.FC = () => {
 
     return result;
   }, [data, assets]);
+
+  const onAssetClick = (asset: { key: string; name: string }) => {
+    dispatch(
+      setSelectedAssetAction({
+        value: asset.key,
+        label: asset.name,
+      })
+    );
+    dispatch(coinloreApi.util.invalidateTags(['Ticker']));
+  };
 
   if (isLoading) {
     return (
@@ -119,10 +124,18 @@ export const PortfolioSider: React.FC = () => {
           renderItem={(asset) => (
             <List.Item
               key={asset.key}
-              style={{ borderBlockEnd: 'none', paddingInlineEnd: '3px' }}
+              style={{
+                borderBlockEnd: 'none',
+                paddingInlineEnd: '3px',
+                cursor: 'pointer',
+              }}
+              onClick={() => onAssetClick(asset)}
             >
               <Card variant="borderless">
-                <AppStatistic asset={asset} titleStyle={{ fontSize: '16px', fontWeight: '500' }} />  
+                <AppStatistic
+                  asset={asset}
+                  titleStyle={{ fontSize: '16px', fontWeight: '500' }}
+                />
                 <List
                   size="small"
                   style={{

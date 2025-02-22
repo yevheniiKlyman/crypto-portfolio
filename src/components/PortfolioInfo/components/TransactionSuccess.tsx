@@ -20,7 +20,7 @@ const TransactionSuccess: React.FC<TransactionSuccessProps> = ({
       status="success"
       title="Successfully Added Transaction!"
       subTitle={`${
-        transaction.transactionType === 'buy' ? 'Bought:' : 'Sold:'
+        transaction.transactionType === 'Buy' ? 'Bought:' : 'Sold:'
       } ${transaction.amount} ${transaction.asset.label} at ${
         transaction.price
       }$. Total: ${transaction.total}$. Date & Time: ${

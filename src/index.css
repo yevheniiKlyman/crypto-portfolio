@@ -13,3 +13,7 @@ html {
   opacity: 0.5;
   pointer-events: none;
 }
+
+.ant-statistic-content-suffix {
+  margin-inline-start: 0 !important;
+}

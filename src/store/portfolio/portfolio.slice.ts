@@ -7,6 +7,7 @@ import { addTransaction, LS_PORTFOLIO_KEY } from './portfolioUtils';
 const initialState: PortfolioState = {
   isDrawerOpen: false,
   showSuccessTransaction: false,
+  selectedAsset: null,
   assets: storage.get(LS_PORTFOLIO_KEY) || {
     totalPrice: 0,
     assets: [],
@@ -23,6 +24,9 @@ const portfolioSlice = createSlice({
     setShowSuccessTransaction(state, action: PayloadAction<boolean>) {
       state.showSuccessTransaction = action.payload;
     },
+    setSelectedAsset(state, action: PayloadAction<{ value: string; label: string } | null>) {
+      state.selectedAsset = action.payload;
+    },
     addTransaction,
   },
   selectors: {
@@ -30,6 +34,7 @@ const portfolioSlice = createSlice({
     selectShowSuccessTransaction: (sliceState) =>
       sliceState.showSuccessTransaction,
     selectAssets: (sliceState) => sliceState.assets,
+    selectSelectedAsset: (sliceState) => sliceState.selectedAsset,
   },
 });
 
@@ -38,8 +43,10 @@ export const setIsDrawerOpenAction = portfolioSlice.actions.setIsDrawerOpen;
 export const setShowSuccessTransactionAction =
   portfolioSlice.actions.setShowSuccessTransaction;
 export const addTransactionAction = portfolioSlice.actions.addTransaction;
+export const setSelectedAssetAction = portfolioSlice.actions.setSelectedAsset;
 export const {
   selectIsDrawerOpen,
   selectShowSuccessTransaction,
   selectAssets,
+  selectSelectedAsset,
 } = portfolioSlice.selectors;

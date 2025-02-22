@@ -6,7 +6,9 @@ const PortfolioPage: React.FC = () => {
   return (
     <>
       <PortfolioSider />
-      <AppContent style={{ marginInlineStart: '410px', padding: '1rem 2rem' }}>
+      <AppContent
+        style={{ marginInlineStart: '410px', padding: '1rem 1rem 1rem 2rem' }}
+      >
         <PortfolioInfo />
       </AppContent>
     </>

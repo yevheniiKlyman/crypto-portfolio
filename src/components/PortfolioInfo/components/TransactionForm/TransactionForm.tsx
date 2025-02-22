@@ -17,6 +17,7 @@ import {
   addTransactionAction,
   selectAssets,
   selectIsDrawerOpen,
+  selectSelectedAsset,
   selectShowSuccessTransaction,
   setShowSuccessTransactionAction,
 } from '@/store/portfolio/portfolio.slice';
@@ -42,6 +43,7 @@ const TransactionForm: React.FC = () => {
   const showSuccessTransaction = useAppSelector(selectShowSuccessTransaction);
   const isDrawerOpen = useAppSelector(selectIsDrawerOpen);
   const assets = useAppSelector(selectAssets);
+  const assetSelectedInPortfolio = useAppSelector(selectSelectedAsset);
   const { data, error, isLoading } = useGetTickersQuery({
     start: 0,
     limit: 100,
@@ -52,11 +54,11 @@ const TransactionForm: React.FC = () => {
       <Select
         style={{ width: 70 }}
         onChange={(val) => {
-          setMaxAmount(val === 'buy' ? 0 : selectedAsset?.totalAmount || 0);
+          setMaxAmount(val === 'Buy' ? 0 : selectedAsset?.totalAmount || 0);
         }}
       >
-        <Option value="buy">Buy</Option>
-        <Option value="sell" disabled={isSellDisabled}>
+        <Option value="Buy">Buy</Option>
+        <Option value="Sell" disabled={isSellDisabled}>
           Sell
         </Option>
       </Select>
@@ -91,7 +93,7 @@ const TransactionForm: React.FC = () => {
     if (selectedTicker) {
       form.setFieldsValue({
         price: Number(selectedTicker.price_usd),
-        transactionType: 'buy',
+        transactionType: 'Buy',
       });
 
       setIsSellDisabled(!selectedAsset?.totalAmount);
@@ -109,6 +111,17 @@ const TransactionForm: React.FC = () => {
     setTransaction(transactionData);
     dispatch(setShowSuccessTransactionAction(true));
   };
+
+  useEffect(() => {
+    if (assetSelectedInPortfolio) {
+      form.setFieldsValue({
+        asset: assetSelectedInPortfolio,
+      });
+
+      onSelect(assetSelectedInPortfolio);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assetSelectedInPortfolio]);
 
   useEffect(() => {
     if (!isDrawerOpen) {
@@ -144,7 +157,7 @@ const TransactionForm: React.FC = () => {
         form={form}
         name="register"
         onFinish={onFinish}
-        initialValues={{ transactionType: 'buy' }}
+        initialValues={{ transactionType: 'Buy' }}
         scrollToFirstError
         layout="vertical"
       >

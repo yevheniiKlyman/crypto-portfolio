@@ -2,6 +2,7 @@ import { Decimal } from 'decimal.js';
 import storage from '@/utils/storage';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { Asset, PortfolioState, Transaction } from './portfolioDataTypes';
+import { formatNumber } from '@/utils/formatNumber';
 
 export const LS_PORTFOLIO_KEY = 'pf_assets';
 
@@ -11,7 +12,7 @@ const calculateTotalAmount = (
 ): number => {
   let total = 0;
 
-  if (transaction.transactionType === 'buy') {
+  if (transaction.transactionType === 'Buy') {
     total = new Decimal(currentTotal).add(transaction.amount).toNumber();
   } else {
     total = new Decimal(currentTotal).sub(transaction.amount).toNumber();
@@ -28,7 +29,7 @@ const calculateAssetAveragePrice = (
   asset: Asset,
   transaction: Transaction
 ): number => {
-  if (transaction.transactionType === 'buy') {
+  if (transaction.transactionType === 'Buy') {
     return new Decimal(asset.totalAmount)
       .times(asset.averagePrice)
       .plus(transaction.total)
@@ -47,12 +48,12 @@ const calculatePortfolioTotalPrice = (assets: Asset[]): number => {
 
 export const addTransaction = (
   state: PortfolioState,
-  action: PayloadAction<Transaction>
+  { payload }: PayloadAction<Transaction>
 ) => {
-  if (!state.assets.assets.find((asset) => asset.id === action.payload.asset.value)) {
+  if (!state.assets.assets.find((asset) => asset.id === payload.asset.value)) {
     state.assets.assets.push({
-      id: action.payload.asset.value,
-      key: action.payload.asset.value,
+      id: payload.asset.value,
+      key: payload.asset.value,
       averagePrice: 0,
       totalPrice: 0,
       totalAmount: 0,
@@ -61,16 +62,22 @@ export const addTransaction = (
   }
 
   const assets = state.assets.assets.map((asset) => {
-    if (asset.id === action.payload.asset.value) {
-      const totalAmount = calculateTotalAmount(asset.totalAmount, action.payload);
-      const averagePrice = calculateAssetAveragePrice(asset, action.payload);
+    if (asset.id === payload.asset.value) {
+      const transactionData = {
+        ...payload,
+        priceFormatted: formatNumber(payload.price),
+        totalFormatted: formatNumber(payload.total),
+        key: payload.dateAndTime + payload.amount,
+      };
+      const totalAmount = calculateTotalAmount(asset.totalAmount, transactionData);
+      const averagePrice = calculateAssetAveragePrice(asset, transactionData);
 
       return {
         ...asset,
         totalAmount,
         averagePrice,
         totalPrice: new Decimal(totalAmount).mul(averagePrice).toNumber(),
-        transactions: [...asset.transactions, action.payload],
+        transactions: [...asset.transactions, transactionData],
       };
     }
     return asset;
