@@ -51,7 +51,7 @@ export const PortfolioSider: React.FC = () => {
       });
     }
 
-    return result;
+    return result.sort((a, b) => b.currentTotalPrice - a.currentTotalPrice);
   }, [data, assets]);
 
   const onAssetClick = (asset: { key: string; name: string }) => {

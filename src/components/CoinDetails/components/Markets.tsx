@@ -22,15 +22,17 @@ const columns: TableProps<MarketForCoin>['columns'] = [
   },
   {
     title: 'Price in Quote',
-    dataIndex: 'price',
-    key: 'price',
+    dataIndex: 'priceFormatted',
+    key: 'priceFormatted',
     align: 'center',
+    sorter: (a, b) => a.price - b.price,
   },
   {
     title: 'Price($)',
-    dataIndex: 'price_usd',
-    key: 'price_usd',
+    dataIndex: 'priceUsdFormatted',
+    key: 'priceUsdFormatted',
     align: 'center',
+    sorter: (a, b) => a.price_usd - b.price_usd,
   },
 ];
 

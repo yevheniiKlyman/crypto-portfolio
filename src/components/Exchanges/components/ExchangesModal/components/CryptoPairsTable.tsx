@@ -37,7 +37,7 @@ const columns: TableProps<CryptoPair>['columns'] = [
   },
 ];
 
-const Markets: React.FC<MarketsProps> = ({ data }) => (
+const CryptoPairsTable: React.FC<MarketsProps> = ({ data }) => (
   <>
     <Table<CryptoPair>
       columns={columns}
@@ -50,4 +50,4 @@ const Markets: React.FC<MarketsProps> = ({ data }) => (
   </>
 );
 
-export default Markets;
+export default CryptoPairsTable;

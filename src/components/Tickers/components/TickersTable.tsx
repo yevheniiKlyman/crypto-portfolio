@@ -17,12 +17,14 @@ const columns: TableProps<Coin>['columns'] = [
     dataIndex: 'symbol',
     key: 'symbol',
     render: (text) => <Typography.Text strong>{text}</Typography.Text>,
+    sorter: (a, b) => a.symbol.localeCompare(b.symbol),
   },
   {
     title: 'Price($)',
     dataIndex: 'price_usd',
     key: 'price_usd',
     align: 'center',
+    sorter: (a, b) => Number(a.price_usd) - Number(b.price_usd),
   },
   {
     title: '1h',
@@ -34,6 +36,7 @@ const columns: TableProps<Coin>['columns'] = [
         {`${percent_change_1h}%`}
       </Tag>
     ),
+    sorter: (a, b) => Number(a.percent_change_1h) - Number(b.percent_change_1h),
   },
   {
     title: '24h',
@@ -45,6 +48,8 @@ const columns: TableProps<Coin>['columns'] = [
         {`${percent_change_24h}%`}
       </Tag>
     ),
+    sorter: (a, b) =>
+      Number(a.percent_change_24h) - Number(b.percent_change_24h),
   },
 ];
 

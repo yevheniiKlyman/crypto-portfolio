@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Alert, Collapse, CollapseProps, Flex, Spin, Typography } from 'antd';
 import {
   useGetTickerQuery,
@@ -66,9 +66,15 @@ const Tickers: React.FC = () => {
     return null;
   };
 
-  const getWatchlistContent = (): React.ReactNode => {
-    if (watchlistData && watchlist.length) {
-      return <TickersTable data={watchlistData} pagination={false} />;
+  const watchlistDataSorted = useMemo(() => {
+    return watchlistData
+      ? [...watchlistData].sort((a, b) => a.rank - b.rank)
+      : [];
+  }, [watchlistData]);
+
+  const getWatchlistContent = useCallback(() => {
+    if (watchlistDataSorted.length && watchlist.length) {
+      return <TickersTable data={watchlistDataSorted} pagination={false} />;
     } else if (watchlistError) {
       return (
         <Alert
@@ -90,7 +96,7 @@ const Tickers: React.FC = () => {
         favorites!
       </Typography.Text>
     );
-  };
+  }, [watchlist, watchlistDataSorted, watchlistError, watchlistLoading]);
 
   const items: CollapseProps['items'] = [
     {

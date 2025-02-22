@@ -33,7 +33,9 @@ const MarketStatisticPage: React.FC = () => {
       <AppSider>
         <Tickers />
       </AppSider>
-      <AppContent style={{ marginInlineStart: '410px', padding: '1rem 2rem' }}>
+      <AppContent
+        style={{ marginInlineStart: '410px', padding: '1rem 1rem 1rem 2rem' }}
+      >
         {!coinId && <GlobalCryptoInfo />}
         {coinId && <CoinDetails />}
       </AppContent>

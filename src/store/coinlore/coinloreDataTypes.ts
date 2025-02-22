@@ -64,11 +64,13 @@ export interface MarketForCoin {
   name: string;
   base: string;
   quote: string;
-  price: number | string;
-  price_usd: number | string;
+  price: number;
+  price_usd: number;
   volume: number;
   volume_usd: number;
   time: number;
+  priceFormatted: string;
+  priceUsdFormatted: string;
 }
 
 export interface ExchangeInExchanges {

@@ -61,8 +61,8 @@ export const coinloreApi = createApi({
       transformResponse: (response: MarketForCoin[]) => [
         ...response.map((market) => ({
           ...market,
-          price: formatNumber(Number(market.price), 2),
-          price_usd: formatNumber(Number(market.price_usd), 2),
+          priceFormatted: formatNumber(Number(market.price), 2),
+          priceUsdFormatted: formatNumber(Number(market.price_usd), 2),
           key: market.name + market.quote,
         })),
       ],
