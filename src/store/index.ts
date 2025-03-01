@@ -4,7 +4,7 @@ import { coinloreApi } from './coinlore/coinlore.api';
 import { coinloreReducer } from './coinlore/coinlore.slice';
 import { portfolioReducer } from './portfolio/portfolio.slice';
 import { authApi } from './auth/auth.api';
-import { userReducer } from './auth/user.slice';
+import { authReducer } from './auth/auth.slice';
 
 export const store = configureStore({
   reducer: {
@@ -12,7 +12,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     coinlore: coinloreReducer,
     portfolio: portfolioReducer,
-    user: userReducer,
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()

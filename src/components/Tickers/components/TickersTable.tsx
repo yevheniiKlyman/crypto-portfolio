@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Tag, Typography } from 'antd';
 import type { TableProps } from 'antd';
-import { Coin } from '@store/coinlore/coinloreDataTypes';
+import { Coin } from '@/store/coinlore/coinloreTypes';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { selectCoinId, setCoinIdAction } from '@store/coinlore/coinlore.slice';
 import { coinloreApi } from '@store/coinlore/coinlore.api';

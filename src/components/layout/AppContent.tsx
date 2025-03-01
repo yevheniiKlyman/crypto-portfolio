@@ -1,4 +1,6 @@
 import { Layout } from 'antd';
+import AuthModal from '../AuthModal/AuthModal';
+import SignOutModal from '../SignOutModal';
 
 const contentStyle: React.CSSProperties = {
   minHeight: 'calc(100vh - 60px)',
@@ -18,6 +20,8 @@ const AppContent: React.FC<AppContentProps> = ({ children, style = {} }) => {
   return (
     <Layout.Content style={{ ...contentStyle, ...style }}>
       {children}
+      <AuthModal />
+      <SignOutModal />
     </Layout.Content>
   );
 };

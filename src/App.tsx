@@ -8,7 +8,7 @@ import AppHeader from './components/layout/AppHeader';
 import { useAppDispatch } from './store';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase/firebase';
-import { setUserAction } from './store/auth/user.slice';
+import { setIsUserLoadingAction, setUserAction } from './store/auth/auth.slice';
 
 const layoutStyle: React.CSSProperties = {
   overflow: 'hidden',
@@ -28,8 +28,20 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      dispatch(setUserAction(user));
+      if (user?.providerData) {
+        dispatch(
+          setUserAction({
+            email: user.providerData[0].email || '',
+            uid: user.providerData[0].uid,
+          })
+        );
+      } else {
+        dispatch(setUserAction(null));
+      }
+
+      dispatch(setIsUserLoadingAction(false));
     });
+
     return () => unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

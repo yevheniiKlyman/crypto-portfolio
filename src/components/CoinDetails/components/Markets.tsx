@@ -1,5 +1,5 @@
 import { Divider, Table, TableProps, Typography } from 'antd';
-import { MarketForCoin } from '@store/coinlore/coinloreDataTypes';
+import { MarketForCoin } from '@/store/coinlore/coinloreTypes';
 
 interface MarketsProps {
   data: MarketForCoin[];
@@ -14,10 +14,14 @@ const columns: TableProps<MarketForCoin>['columns'] = [
   },
   {
     title: 'Quote currency',
-    dataIndex: ['base','quote'],
+    dataIndex: ['base', 'quote'],
     key: 'quote',
     align: 'center',
-    render: (_, { base, quote }) => <span>{base}/{quote}</span>,
+    render: (_, { base, quote }) => (
+      <span>
+        {base}/{quote}
+      </span>
+    ),
     sorter: (a, b) => a.quote.localeCompare(b.quote),
   },
   {
@@ -51,6 +55,6 @@ const Markets: React.FC<MarketsProps> = ({ data }) => (
       style={{ marginTop: '1rem' }}
     />
   </>
-);  
+);
 
 export default Markets;

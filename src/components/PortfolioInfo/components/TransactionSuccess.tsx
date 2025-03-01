@@ -3,7 +3,7 @@ import {
   setIsDrawerOpenAction,
   setShowSuccessTransactionAction,
 } from '@/store/portfolio/portfolio.slice';
-import { Transaction } from '@/store/portfolio/portfolioDataTypes';
+import { Transaction } from '@/store/portfolio/portfolioTypes';
 import { Button, Result } from 'antd';
 
 interface TransactionSuccessProps {

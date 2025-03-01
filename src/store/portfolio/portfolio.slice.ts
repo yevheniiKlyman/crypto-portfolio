@@ -1,7 +1,7 @@
 import storage from '@/utils/storage';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { PortfolioState } from './portfolioDataTypes';
+import { PortfolioState } from './portfolioTypes';
 import { addTransaction, LS_PORTFOLIO_KEY } from './portfolioUtils';
 
 const initialState: PortfolioState = {
@@ -24,7 +24,10 @@ const portfolioSlice = createSlice({
     setShowSuccessTransaction(state, action: PayloadAction<boolean>) {
       state.showSuccessTransaction = action.payload;
     },
-    setSelectedAsset(state, action: PayloadAction<{ value: string; label: string } | null>) {
+    setSelectedAsset(
+      state,
+      action: PayloadAction<{ value: string; label: string } | null>
+    ) {
       state.selectedAsset = action.payload;
     },
     addTransaction,

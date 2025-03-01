@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table } from 'antd';
 import type { TableProps } from 'antd';
-import { ExchangeInExchanges } from '@store/coinlore/coinloreDataTypes';
+import { ExchangeInExchanges } from '@/store/coinlore/coinloreTypes';
 import { useAppDispatch } from '@/store';
 import { setExchangeIdAction } from '@store/coinlore/coinlore.slice';
 import classes from './styles/ExchangesTable.module.css';

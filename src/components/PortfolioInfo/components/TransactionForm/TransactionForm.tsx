@@ -25,7 +25,7 @@ import {
   Asset,
   Transaction,
   TransactionRaw,
-} from '@/store/portfolio/portfolioDataTypes';
+} from '@/store/portfolio/portfolioTypes';
 import TransactionSuccess from '../TransactionSuccess';
 import classes from './styles/TransactionForm.module.css';
 
@@ -120,7 +120,7 @@ const TransactionForm: React.FC = () => {
 
       onSelect(assetSelectedInPortfolio);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assetSelectedInPortfolio]);
 
   useEffect(() => {

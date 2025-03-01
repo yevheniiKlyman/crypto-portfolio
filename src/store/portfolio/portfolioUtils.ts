@@ -1,14 +1,14 @@
 import { Decimal } from 'decimal.js';
 import storage from '@/utils/storage';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { Asset, PortfolioState, Transaction } from './portfolioDataTypes';
+import { Asset, PortfolioState, Transaction } from './portfolioTypes';
 import { formatNumber } from '@/utils/formatNumber';
 
 export const LS_PORTFOLIO_KEY = 'pf_assets';
 
 const calculateTotalAmount = (
   currentTotal: number,
-  transaction: Transaction,
+  transaction: Transaction
 ): number => {
   let total = 0;
 
@@ -69,7 +69,10 @@ export const addTransaction = (
         totalFormatted: formatNumber(payload.total),
         key: payload.dateAndTime + payload.amount,
       };
-      const totalAmount = calculateTotalAmount(asset.totalAmount, transactionData);
+      const totalAmount = calculateTotalAmount(
+        asset.totalAmount,
+        transactionData
+      );
       const averagePrice = calculateAssetAveragePrice(asset, transactionData);
 
       return {

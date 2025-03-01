@@ -5,7 +5,7 @@ import {
   selectAssets,
   selectSelectedAsset,
 } from '@/store/portfolio/portfolio.slice';
-import { Transaction } from '@/store/portfolio/portfolioDataTypes';
+import { Transaction } from '@/store/portfolio/portfolioTypes';
 import classes from './styles/AssetTransactions.module.css';
 
 const columns: TableProps<Transaction>['columns'] = [

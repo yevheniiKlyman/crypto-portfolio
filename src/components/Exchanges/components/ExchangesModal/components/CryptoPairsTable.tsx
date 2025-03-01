@@ -1,5 +1,5 @@
 import { Table, TableProps } from 'antd';
-import { CryptoPair } from '@store/coinlore/coinloreDataTypes';
+import { CryptoPair } from '@/store/coinlore/coinloreTypes';
 
 interface MarketsProps {
   data: CryptoPair[];
