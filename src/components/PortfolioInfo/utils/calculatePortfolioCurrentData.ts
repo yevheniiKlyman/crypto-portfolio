@@ -57,7 +57,7 @@ export const calculatePortfolioCurrentData = (
       .toFixed(2),
     chartData: currentAssetsTotalPrices.map((item) => ({
       label: item.label,
-      exploded: true,
+      exploded: assets.assets.length > 1,
       y: Number(
         new Decimal(item.price)
           .div(portfolioCurrentTotalPrice)

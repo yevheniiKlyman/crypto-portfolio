@@ -1,23 +1,23 @@
+import { useMemo } from 'react';
+import Decimal from 'decimal.js';
+import { Alert, Button, Divider, Flex, Spin, Tag, Typography } from 'antd';
+import { LeftOutlined } from '@ant-design/icons';
 import AddTransactionButton from '@/components/ui/AddTransactionButton';
 import AppStatistic from '@/components/ui/AppStatistic';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { useGetTickerQuery } from '@/store/coinlore/coinlore.api';
 import {
-  selectAssets,
   selectSelectedAsset,
   setSelectedAssetAction,
 } from '@/store/portfolio/portfolio.slice';
 import { formatNumber } from '@/utils/formatNumber';
-import { LeftOutlined } from '@ant-design/icons';
-import { Alert, Button, Divider, Flex, Spin, Tag, Typography } from 'antd';
-import Decimal from 'decimal.js';
-import { useMemo } from 'react';
+import { useGetPortfolio } from '@/store/hooks/useGetPortfolio';
 import AssetTransactions from './components/AssetTransactions/AssetTransactions';
 
 const PortfolioAssetInfo: React.FC = () => {
   const dispatch = useAppDispatch();
-  const assets = useAppSelector(selectAssets);
-  const assetsIds = assets.assets.map((asset) => asset.id).join(',');
+  const { portfolio, portfolioError, portfolioLoading } = useGetPortfolio();
+  const assetsIds = portfolio.assets.map((asset) => asset.id).join(',');
   const selectedAsset = useAppSelector(selectSelectedAsset);
   const { data, error, isLoading } = useGetTickerQuery(assetsIds, {
     pollingInterval: 3 * 60 * 1000,
@@ -26,7 +26,7 @@ const PortfolioAssetInfo: React.FC = () => {
   });
 
   const assetData = useMemo(() => {
-    const asset = assets.assets.find(
+    const asset = portfolio.assets.find(
       (asset) => asset.id === selectedAsset?.value
     );
     const ticker = data?.find((item) => item.id === selectedAsset?.value);
@@ -49,14 +49,14 @@ const PortfolioAssetInfo: React.FC = () => {
       totalPrice: asset.totalPrice,
       totalPriceUsdDiff,
       totalPriceDiffPrecentage: new Decimal(totalPriceUsdDiff)
-        .div(assets.totalPrice)
+        .div(portfolio.totalPrice)
         .mul(100)
         .toFixed(2),
       totalAmount: asset.totalAmount,
     };
-  }, [assets, data, selectedAsset]);
+  }, [portfolio, data, selectedAsset]);
 
-  if (isLoading) {
+  if (isLoading || portfolioLoading) {
     return (
       <Flex justify="center" style={{ marginTop: '2rem' }}>
         <Spin size="large" />
@@ -64,10 +64,12 @@ const PortfolioAssetInfo: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error || portfolioError) {
     return (
       <Alert
-        message="Something went wrong. Please try again later..."
+        message={
+          portfolioError || 'Something went wrong. Please try again later...'
+        }
         type="error"
       />
     );
@@ -115,13 +117,17 @@ const PortfolioAssetInfo: React.FC = () => {
               {assetData.totalPriceUsdDiff.toFixed(2)}$
             </Typography.Text>
           </Typography.Paragraph>
-          <Typography.Paragraph style={{ fontSize: '16px', marginBlockEnd: '5px' }}>
+          <Typography.Paragraph
+            style={{ fontSize: '16px', marginBlockEnd: '5px' }}
+          >
             <span style={{ color: '#00000073', marginInlineEnd: '1rem' }}>
               Coin's average buying price:
             </span>
             {assetData.averagePrice}$
           </Typography.Paragraph>
-          <Typography.Paragraph style={{ fontSize: '16px', marginBlockEnd: '5px' }}>
+          <Typography.Paragraph
+            style={{ fontSize: '16px', marginBlockEnd: '5px' }}
+          >
             <span style={{ color: '#00000073', marginInlineEnd: '1rem' }}>
               Current coin price:
             </span>

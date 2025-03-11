@@ -1,30 +1,31 @@
 import { useMemo } from 'react';
 import { Alert, Card, Empty, Flex, List, Spin, Tag, Typography } from 'antd';
 import Decimal from 'decimal.js';
-import { useAppSelector, useAppDispatch } from '@/store';
-import {
-  selectAssets,
-  setSelectedAssetAction,
-} from '@/store/portfolio/portfolio.slice';
-import AppSider from '../layout/AppSider';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { setSelectedAssetAction } from '@/store/portfolio/portfolio.slice';
 import { coinloreApi, useGetTickerQuery } from '@/store/coinlore/coinlore.api';
+import { useGetPortfolio } from '@/store/hooks/useGetPortfolio';
+import { selectUser } from '@/store/auth/auth.slice';
+import AppSider from '../layout/AppSider';
 import AppStatistic from '../ui/AppStatistic';
 import AddTransactionButton from '../ui/AddTransactionButton';
 
 export const PortfolioSider: React.FC = () => {
   const dispatch = useAppDispatch();
-  const assets = useAppSelector(selectAssets);
-  const assetsIds = assets.assets.map((asset) => asset.id).join(',');
+  const user = useAppSelector(selectUser);
+  const { portfolio, portfolioError, portfolioLoading } = useGetPortfolio();
+  const assetsIds = portfolio.assets.map((asset) => asset.id).join(',');
+
   const { data, error, isLoading } = useGetTickerQuery(assetsIds, {
     pollingInterval: 3 * 60 * 1000,
     skipPollingIfUnfocused: true,
-    skip: !assets.totalPrice,
+    skip: !portfolio.totalPrice,
   });
 
   const assetsCardData = useMemo(() => {
     const result = [];
 
-    for (const asset of assets.assets.filter(
+    for (const asset of portfolio.assets.filter(
       (asset) => asset.totalAmount > 0
     )) {
       const ticker = data?.find((item) => item.id === asset.id);
@@ -52,7 +53,7 @@ export const PortfolioSider: React.FC = () => {
     }
 
     return result.sort((a, b) => b.currentTotalPrice - a.currentTotalPrice);
-  }, [data, assets]);
+  }, [data, portfolio]);
 
   const onAssetClick = (asset: { key: string; name: string }) => {
     dispatch(
@@ -64,7 +65,7 @@ export const PortfolioSider: React.FC = () => {
     dispatch(coinloreApi.util.invalidateTags(['Ticker']));
   };
 
-  if (isLoading) {
+  if (isLoading || portfolioLoading) {
     return (
       <AppSider>
         <Flex justify="center" style={{ marginTop: '2rem' }}>
@@ -74,11 +75,13 @@ export const PortfolioSider: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error || portfolioError) {
     return (
       <AppSider>
         <Alert
-          message="Something went wrong. Please try again later..."
+          message={
+            portfolioError || 'Something went wrong. Please try again later...'
+          }
           type="error"
         />
       </AppSider>
@@ -104,6 +107,7 @@ export const PortfolioSider: React.FC = () => {
               color="primary"
               type="link"
               icon={false}
+              disabled={!user}
               style={{ fontSize: '16px', paddingInlineStart: '5px' }}
             >
               add your first asset!

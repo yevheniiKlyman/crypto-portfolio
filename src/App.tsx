@@ -28,11 +28,11 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user?.providerData) {
+      if (user) {
         dispatch(
           setUserAction({
-            email: user.providerData[0].email || '',
-            uid: user.providerData[0].uid,
+            email: user.email || '',
+            uid: user.uid,
           })
         );
       } else {

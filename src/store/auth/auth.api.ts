@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
   createUserWithEmailAndPassword,
@@ -90,6 +89,7 @@ export const authApi = createApi({
       async queryFn() {
         try {
           await signOut(auth);
+          window.location.reload();
           return { data: undefined };
         } catch (error) {
           return errorHandler(error);

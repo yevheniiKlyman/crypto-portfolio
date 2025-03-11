@@ -1,28 +1,32 @@
 import { useMemo } from 'react';
 import { Alert, Divider, Flex, Spin, Tag, Typography, Image } from 'antd';
-import { useAppSelector } from '@/store';
-import { selectAssets } from '@/store/portfolio/portfolio.slice';
+import { ExclamationCircleTwoTone } from '@ant-design/icons';
 import AppStatistic from '@/components/ui/AppStatistic';
 import { useGetTickerQuery } from '@/store/coinlore/coinlore.api';
 import PieChart from './PieChart/PieChart';
 import { calculatePortfolioCurrentData } from '../utils/calculatePortfolioCurrentData';
-import emptyPortfolioImg from '@/assets/images/empty-portfolio.jpg';
 import AddTransactionButton from '@/components/ui/AddTransactionButton';
+import { useGetPortfolio } from '@/store/hooks/useGetPortfolio';
+import { useAppSelector } from '@/store';
+import { selectUser } from '@/store/auth/auth.slice';
+import SignInButton from '@/components/ui/SignInButton';
+import emptyPortfolioImg from '@/assets/images/empty-portfolio.jpg';
 
 const PortfolioGeneralInfo: React.FC = () => {
-  const assets = useAppSelector(selectAssets);
-  const assetsIds = assets.assets.map((asset) => asset.id).join(',');
+  const user = useAppSelector(selectUser);
+  const { portfolio, portfolioError, portfolioLoading } = useGetPortfolio();
+  const assetsIds = portfolio.assets.map((asset) => asset.id).join(',');
   const { data, error, isLoading } = useGetTickerQuery(assetsIds, {
     pollingInterval: 3 * 60 * 1000,
     skipPollingIfUnfocused: true,
-    skip: !assets.totalPrice,
+    skip: !portfolio.totalPrice,
   });
 
   const portfolioCurrentData = useMemo(() => {
-    return calculatePortfolioCurrentData(assets, data);
-  }, [data, assets]);
+    return calculatePortfolioCurrentData(portfolio, data);
+  }, [data, portfolio]);
 
-  if (isLoading) {
+  if (isLoading || portfolioLoading) {
     return (
       <Flex justify="center" style={{ marginTop: '2rem' }}>
         <Spin size="large" />
@@ -30,22 +34,45 @@ const PortfolioGeneralInfo: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error || portfolioError) {
     return (
       <Alert
-        message="Something went wrong. Please try again later..."
+        message={
+          portfolioError || 'Something went wrong. Please try again later...'
+        }
         type="error"
       />
     );
   }
 
-  if (!assets.totalPrice) {
+  if (!portfolio.totalPrice) {
     return (
       <Flex align="center" vertical>
-        <Typography.Title level={2} style={{ textAlign: 'center' }}>
+        <Typography.Title level={3} style={{ textAlign: 'center' }}>
           Track the status of your assets. And watch your portfolio flourish!
         </Typography.Title>
-        <AddTransactionButton style={{ marginBlock: '1rem' }}>
+        {!user && (
+          <Alert
+            message={
+              <>
+                <ExclamationCircleTwoTone style={{ marginInlineEnd: '8px' }} />
+                You need to
+                <SignInButton
+                  style={{ paddingInline: '5px', fontSize: '18px' }}
+                />
+                first.
+              </>
+            }
+            style={{
+              width: '100%',
+              textAlign: 'center',
+              fontSize: '18px',
+              marginBlock: '1rem',
+            }}
+            type="info"
+          />
+        )}
+        <AddTransactionButton style={{ marginBlock: '1rem' }} disabled={!user}>
           Add Asset
         </AddTransactionButton>
         <Image

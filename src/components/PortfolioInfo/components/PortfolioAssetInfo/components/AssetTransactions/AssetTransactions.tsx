@@ -1,11 +1,9 @@
 import { useMemo } from 'react';
 import { Table, TableProps, Tooltip, Typography } from 'antd';
 import { useAppSelector } from '@/store';
-import {
-  selectAssets,
-  selectSelectedAsset,
-} from '@/store/portfolio/portfolio.slice';
-import { Transaction } from '@/store/portfolio/portfolioTypes';
+import { selectSelectedAsset } from '@/store/portfolio/portfolio.slice';
+import { useGetPortfolio } from '@/store/hooks/useGetPortfolio';
+import { Transaction } from '@/store/db/dbTypes';
 import classes from './styles/AssetTransactions.module.css';
 
 const columns: TableProps<Transaction>['columns'] = [
@@ -71,12 +69,13 @@ const columns: TableProps<Transaction>['columns'] = [
 ];
 
 const AssetTransactions: React.FC = () => {
-  const assets = useAppSelector(selectAssets);
+  const { portfolio } = useGetPortfolio();
   const selectedAsset = useAppSelector(selectSelectedAsset);
   const assetTransactions = useMemo(() => {
-    return assets.assets.filter((asset) => asset.id === selectedAsset?.value)[0]
-      .transactions;
-  }, [assets.assets, selectedAsset]);
+    return portfolio.assets.filter(
+      (asset) => asset.id === selectedAsset?.value
+    )[0].transactions;
+  }, [portfolio.assets, selectedAsset]);
 
   if (!assetTransactions.length || !selectedAsset) {
     return null;

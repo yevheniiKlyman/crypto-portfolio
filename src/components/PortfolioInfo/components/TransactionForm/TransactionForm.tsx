@@ -9,24 +9,21 @@ import {
   Alert,
   Flex,
   Spin,
+  notification,
 } from 'antd';
 import { Decimal } from 'decimal.js';
 import { useGetTickersQuery } from '@/store/coinlore/coinlore.api';
 import { useAppDispatch, useAppSelector } from '@/store';
 import {
-  addTransactionAction,
-  selectAssets,
-  selectIsDrawerOpen,
   selectSelectedAsset,
   selectShowSuccessTransaction,
   setShowSuccessTransactionAction,
 } from '@/store/portfolio/portfolio.slice';
-import {
-  Asset,
-  Transaction,
-  TransactionRaw,
-} from '@/store/portfolio/portfolioTypes';
+import { Asset, Transaction, TransactionRaw } from '@/store/db/dbTypes';
 import TransactionSuccess from '../TransactionSuccess';
+import { useGetPortfolio } from '@/store/hooks/useGetPortfolio';
+import { useUpdatePortfolioMutation } from '@/store/db/db.api';
+import { selectUser } from '@/store/auth/auth.slice';
 import classes from './styles/TransactionForm.module.css';
 
 const { Option } = Select;
@@ -41,8 +38,10 @@ const TransactionForm: React.FC = () => {
   );
   const dispatch = useAppDispatch();
   const showSuccessTransaction = useAppSelector(selectShowSuccessTransaction);
-  const isDrawerOpen = useAppSelector(selectIsDrawerOpen);
-  const assets = useAppSelector(selectAssets);
+  const user = useAppSelector(selectUser);
+  const { portfolio, portfolioError, portfolioLoading } = useGetPortfolio();
+  const [updatePortfolio, { isLoading: isUpdatingPortfolio }] =
+    useUpdatePortfolioMutation();
   const assetSelectedInPortfolio = useAppSelector(selectSelectedAsset);
   const { data, error, isLoading } = useGetTickersQuery({
     start: 0,
@@ -77,7 +76,7 @@ const TransactionForm: React.FC = () => {
 
   const onSelect = (value: { value: string; label: string }) => {
     const selectedTicker = data?.data.find((item) => item.id === value.value);
-    const selectedAsset = assets.assets.find(
+    const selectedAsset = portfolio.assets.find(
       (asset) => asset.id === value.value
     );
     setSelectedAsset(selectedAsset);
@@ -90,30 +89,52 @@ const TransactionForm: React.FC = () => {
       'transactionType',
     ]);
 
+    form.setFieldsValue({
+      transactionType: 'Buy',
+    });
+
+    setIsSellDisabled(!selectedAsset?.totalAmount);
+
     if (selectedTicker) {
       form.setFieldsValue({
         price: Number(selectedTicker.price_usd),
-        transactionType: 'Buy',
       });
-
-      setIsSellDisabled(!selectedAsset?.totalAmount);
     }
   };
 
-  const onFinish = (values: TransactionRaw) => {
+  const onFinish = async (values: TransactionRaw) => {
     const transactionData = {
       ...values,
       dateAndTime: values.dateAndTime.format('YYYY-MM-DD HH:mm'),
+      comment: values.comment || '',
+      asset: {
+        value: values.asset.value,
+        label: values.asset.label,
+        key: values.asset.value,
+      },
     };
 
-    dispatch(addTransactionAction(transactionData));
-    form.resetFields();
-    setTransaction(transactionData);
-    dispatch(setShowSuccessTransactionAction(true));
+    const response = await updatePortfolio({
+      userId: user?.uid,
+      portfolio,
+      transaction: transactionData,
+    });
+
+    if (!response.error) {
+      form.resetFields();
+      setTransaction(transactionData);
+      dispatch(setShowSuccessTransactionAction(true));
+    } else {
+      notification.error({
+        message: 'Error',
+        description: 'An error occurred while adding the transaction.',
+        placement: 'top',
+      });
+    }
   };
 
   useEffect(() => {
-    if (assetSelectedInPortfolio) {
+    if (assetSelectedInPortfolio && data?.data) {
       form.setFieldsValue({
         asset: assetSelectedInPortfolio,
       });
@@ -121,18 +142,9 @@ const TransactionForm: React.FC = () => {
       onSelect(assetSelectedInPortfolio);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetSelectedInPortfolio]);
+  }, [assetSelectedInPortfolio, data]);
 
-  useEffect(() => {
-    if (!isDrawerOpen) {
-      form.resetFields();
-      setMaxAmount(0);
-      setIsSellDisabled(true);
-      setSelectedAsset(undefined);
-    }
-  }, [isDrawerOpen, form]);
-
-  if (isLoading) {
+  if (isLoading || portfolioLoading) {
     return (
       <Flex justify="center" style={{ paddingTop: '2rem' }}>
         <Spin size="large" />
@@ -140,9 +152,11 @@ const TransactionForm: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error || portfolioError) {
     <Alert
-      message="Something went wrong. Please try again later..."
+      message={
+        portfolioError || 'Something went wrong. Please try again later...'
+      }
       type="error"
     />;
   }
@@ -151,8 +165,8 @@ const TransactionForm: React.FC = () => {
     return <TransactionSuccess transaction={transaction} />;
   }
 
-  return (
-    data?.data && (
+  if (data?.data) {
+    return (
       <Form
         form={form}
         name="register"
@@ -241,13 +255,17 @@ const TransactionForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isUpdatingPortfolio}
+          >
             Add transaction
           </Button>
         </Form.Item>
       </Form>
-    )
-  );
+    );
+  }
 };
 
 export default TransactionForm;

@@ -1,7 +1,5 @@
 import { Decimal } from 'decimal.js';
-import storage from '@/utils/storage';
-import { PayloadAction } from '@reduxjs/toolkit';
-import { Asset, PortfolioState, Transaction } from './portfolioTypes';
+import { Asset, Portfolio, Transaction } from './dbTypes';
 import { formatNumber } from '@/utils/formatNumber';
 
 export const LS_PORTFOLIO_KEY = 'pf_assets';
@@ -47,13 +45,15 @@ const calculatePortfolioTotalPrice = (assets: Asset[]): number => {
 };
 
 export const addTransaction = (
-  state: PortfolioState,
-  { payload }: PayloadAction<Transaction>
-) => {
-  if (!state.assets.assets.find((asset) => asset.id === payload.asset.value)) {
-    state.assets.assets.push({
-      id: payload.asset.value,
-      key: payload.asset.value,
+  portfolio: Portfolio,
+  transaction: Transaction
+): Portfolio => {
+  const portfolioUpdated: Portfolio = JSON.parse(JSON.stringify(portfolio));
+
+  if (!portfolioUpdated.assets.find((asset) => asset.id === transaction.asset.value)) {
+    portfolioUpdated.assets.push({
+      id: transaction.asset.value,
+      key: transaction.asset.value,
       averagePrice: 0,
       totalPrice: 0,
       totalAmount: 0,
@@ -61,13 +61,13 @@ export const addTransaction = (
     });
   }
 
-  const assets = state.assets.assets.map((asset) => {
-    if (asset.id === payload.asset.value) {
+  const assets = portfolioUpdated.assets.map((asset) => {
+    if (asset.id === transaction.asset.value) {
       const transactionData = {
-        ...payload,
-        priceFormatted: formatNumber(payload.price),
-        totalFormatted: formatNumber(payload.total),
-        key: payload.dateAndTime + payload.amount,
+        ...transaction,
+        priceFormatted: formatNumber(transaction.price),
+        totalFormatted: formatNumber(transaction.total),
+        key: transaction.dateAndTime + transaction.amount,
       };
       const totalAmount = calculateTotalAmount(
         asset.totalAmount,
@@ -86,11 +86,8 @@ export const addTransaction = (
     return asset;
   });
 
-  state.assets = {
-    ...state.assets,
+  return {
     totalPrice: calculatePortfolioTotalPrice(assets),
     assets,
   };
-
-  storage.set(LS_PORTFOLIO_KEY, state.assets);
 };

@@ -1,15 +1,25 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Alert, Collapse, CollapseProps, Flex, Spin, Typography } from 'antd';
+import {
+  Alert,
+  Collapse,
+  CollapseProps,
+  Flex,
+  Spin,
+  Typography,
+} from 'antd';
 import {
   useGetTickerQuery,
   useGetTickersQuery,
 } from '@store/coinlore/coinlore.api';
 import TickersTable from './components/TickersTable';
+import { useGetWatchlist } from '@/store/hooks/useGetWatchlist';
 import classes from './styles/Tickers.module.css';
 import { useAppSelector } from '@/store';
-import { selectWatchlist } from '@/store/coinlore/coinlore.slice';
+import { selectUser } from '@/store/auth/auth.slice';
+import SignInButton from '../ui/SignInButton';
 
 const Tickers: React.FC = () => {
+  const user = useAppSelector(selectUser);
   const [tickerstStart, setTickerstStart] = useState(0);
   const { data, error, isLoading } = useGetTickersQuery(
     { start: tickerstStart, limit: 50 },
@@ -19,11 +29,11 @@ const Tickers: React.FC = () => {
     }
   );
 
-  const watchlist = useAppSelector(selectWatchlist);
+  const { watchlist, watchlistError, watchlistLoading } = useGetWatchlist();
   const {
-    data: watchlistData,
-    error: watchlistError,
-    isLoading: watchlistLoading,
+    data: watchlistTickers,
+    error: watchlistTickersError,
+    isLoading: watchlistTickersLoading,
   } = useGetTickerQuery(watchlist.join(','), {
     pollingInterval: 3 * 60 * 1000,
     skipPollingIfUnfocused: true,
@@ -67,22 +77,24 @@ const Tickers: React.FC = () => {
   };
 
   const watchlistDataSorted = useMemo(() => {
-    return watchlistData
-      ? [...watchlistData].sort((a, b) => a.rank - b.rank)
+    return watchlistTickers
+      ? [...watchlistTickers].sort((a, b) => a.rank - b.rank)
       : [];
-  }, [watchlistData]);
+  }, [watchlistTickers]);
 
   const getWatchlistContent = useCallback(() => {
     if (watchlistDataSorted.length && watchlist.length) {
       return <TickersTable data={watchlistDataSorted} pagination={false} />;
-    } else if (watchlistError) {
+    } else if (watchlistTickersError || watchlistError) {
       return (
         <Alert
-          message="Something went wrong. Please try again later..."
+          message={
+            watchlistError || 'Something went wrong. Please try again later...'
+          }
           type="error"
         />
       );
-    } else if (watchlistLoading) {
+    } else if (watchlistTickersLoading || watchlistLoading) {
       return (
         <Flex justify="center">
           <Spin size="large" />
@@ -91,12 +103,30 @@ const Tickers: React.FC = () => {
     }
 
     return (
-      <Typography.Text>
-        Your watchlist is currently empty. Add some coins to keep track of your
-        favorites!
-      </Typography.Text>
+      <Typography.Paragraph style={{ marginBlockEnd: '0.5rem' }}>
+        <span style={{ paddingInlineEnd: '5px' }}>
+          Your watchlist is currently empty.
+        </span>
+        {user ? (
+          'Add some coins to keep track of your favorites!'
+        ) : (
+          <>
+            Please
+            <SignInButton style={{ paddingInline: '5px' }} />
+            to add coins to your watchlist.
+          </>
+        )}
+      </Typography.Paragraph>
     );
-  }, [watchlist, watchlistDataSorted, watchlistError, watchlistLoading]);
+  }, [
+    watchlistDataSorted,
+    watchlist.length,
+    watchlistTickersError,
+    watchlistError,
+    watchlistTickersLoading,
+    watchlistLoading,
+    user,
+  ]);
 
   const items: CollapseProps['items'] = [
     {
