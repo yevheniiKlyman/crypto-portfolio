@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router';
 import { Layout } from 'antd';
-import MarketStatisticPage from './pages/MarketStatisticPage';
+import MarketStatisticPage from './pages/MarketStatisticPage/MarketStatisticPage';
 import PortfolioPage from './pages/PortfolioPage';
 import ExchangesPage from './pages/ExchangesPage';
 import AppHeader from './components/layout/AppHeader';

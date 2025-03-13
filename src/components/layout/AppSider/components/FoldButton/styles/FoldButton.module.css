@@ -1,0 +1,14 @@
+.foldButton {
+  position: absolute;
+  top: 16px;
+  inset-inline-end: -40px;
+  border: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  z-index: 101;
+
+  svg {
+    width: 19px;
+    height: 19px;
+  }
+}

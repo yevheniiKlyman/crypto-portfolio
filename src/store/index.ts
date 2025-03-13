@@ -3,6 +3,7 @@ import { useDispatch, useSelector, useStore } from 'react-redux';
 import { coinloreReducer } from './coinlore/coinlore.slice';
 import { portfolioReducer } from './portfolio/portfolio.slice';
 import { authReducer } from './auth/auth.slice';
+import { layoutReducer } from './layout/layout.slice';
 import { coinloreApi } from './coinlore/coinlore.api';
 import { authApi } from './auth/auth.api';
 import { dbApi } from './db/db.api';
@@ -15,6 +16,7 @@ export const store = configureStore({
     coinlore: coinloreReducer,
     portfolio: portfolioReducer,
     auth: authReducer,
+    layout: layoutReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()

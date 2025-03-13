@@ -41,7 +41,7 @@ const Navigation: React.FC = () => {
 
   useEffect(() => {
     setCurrent(location.pathname);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -54,6 +54,8 @@ const Navigation: React.FC = () => {
       style={{
         backgroundColor: 'transparent',
         width: '100%',
+        minWidth: 0,
+        flex: 'auto',
       }}
       className={classes.navigation}
     />

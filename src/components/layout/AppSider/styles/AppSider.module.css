@@ -1,0 +1,31 @@
+.AppSider {
+  background-color: #F5F5F5;
+  max-height: calc(100vh - 60px);
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  z-index: 101;
+
+  :global(.ant-layout-sider-children) {
+    width: 100%;
+    overflow: scroll;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+    scrollbar-color: #eaeaea transparent;
+  }
+
+  @media (max-width: 768px) {
+    .responsive-title {
+      font-size: 20px;
+    }
+  }
+}
+
+.hidden {
+  @media (max-width: 768px) {
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+  }
+}

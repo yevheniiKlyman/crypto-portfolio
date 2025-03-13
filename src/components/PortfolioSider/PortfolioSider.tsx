@@ -6,7 +6,7 @@ import { setSelectedAssetAction } from '@/store/portfolio/portfolio.slice';
 import { coinloreApi, useGetTickerQuery } from '@/store/coinlore/coinlore.api';
 import { useGetPortfolio } from '@/store/hooks/useGetPortfolio';
 import { selectUser } from '@/store/auth/auth.slice';
-import AppSider from '../layout/AppSider';
+import AppSider from '../layout/AppSider/AppSider';
 import AppStatistic from '../ui/AppStatistic';
 import AddTransactionButton from '../ui/AddTransactionButton';
 

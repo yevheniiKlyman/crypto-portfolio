@@ -18,7 +18,7 @@ const GlobalCryptoInfo: React.FC = () => {
 
   return (
     <>
-      <Typography.Title level={1}>
+      <Typography.Title level={2}>
         Global crypto statistics&#160;
         <Tooltip title="According to coinlore.com">
           <InfoCircleTwoTone style={{ fontSize: '32px' }} />

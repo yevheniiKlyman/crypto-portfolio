@@ -9,6 +9,10 @@ html {
   scrollbar-color: #eaeaea transparent;
 }
 
+body {
+  min-width: 450px;
+}
+
 .blur-loading {
   opacity: 0.5;
   pointer-events: none;
