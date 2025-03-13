@@ -1,14 +1,13 @@
 import AppContent from '@components/layout/AppContent';
 import PortfolioInfo from '@/components/PortfolioInfo/PortfolioInfo';
 import PortfolioSider from '@/components/PortfolioSider/PortfolioSider';
+import classes from './styles/PortfolioPage.module.css';
 
 const PortfolioPage: React.FC = () => {
   return (
     <>
       <PortfolioSider />
-      <AppContent
-        style={{ marginInlineStart: '410px', padding: '1rem 1rem 1rem 2rem' }}
-      >
+      <AppContent className={classes.portfolioPage}>
         <PortfolioInfo />
       </AppContent>
     </>
