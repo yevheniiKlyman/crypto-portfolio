@@ -1,10 +1,11 @@
 import React from 'react';
-import { Table, Tag, Typography } from 'antd';
+import { Grid, Table, Tag, Typography } from 'antd';
 import type { TableProps } from 'antd';
 import { Coin } from '@/store/coinlore/coinloreTypes';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { selectCoinId, setCoinIdAction } from '@store/coinlore/coinlore.slice';
 import { coinloreApi } from '@store/coinlore/coinlore.api';
+import { setIsSiderCollapsedAction } from '@/store/layout/layout.slice';
 
 interface TickersTableProps {
   data: Coin[];
@@ -56,6 +57,7 @@ const columns: TableProps<Coin>['columns'] = [
 const TickersTable: React.FC<TickersTableProps> = ({ data, pagination }) => {
   const dispatch = useAppDispatch();
   const coinId = useAppSelector(selectCoinId);
+  const screens = Grid.useBreakpoint();
 
   return (
     <Table<Coin>
@@ -67,6 +69,9 @@ const TickersTable: React.FC<TickersTableProps> = ({ data, pagination }) => {
       onRow={(record) => ({
         onClick: () => {
           dispatch(setCoinIdAction(record.id));
+          if (!screens.md) {
+            dispatch(setIsSiderCollapsedAction(true));
+          }
           setTimeout(() => {
             dispatch(
               coinloreApi.util.invalidateTags([{ type: 'Ticker', id: coinId }])

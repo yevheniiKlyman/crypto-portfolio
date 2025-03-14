@@ -1,19 +1,21 @@
 import { useMemo } from 'react';
-import { Alert, Divider, Flex, Spin, Tag, Typography, Image } from 'antd';
+import { Alert, Divider, Flex, Spin, Tag, Typography, Image, Grid } from 'antd';
 import { ExclamationCircleTwoTone } from '@ant-design/icons';
 import AppStatistic from '@/components/ui/AppStatistic';
 import { useGetTickerQuery } from '@/store/coinlore/coinlore.api';
-import PieChart from './PieChart/PieChart';
-import { calculatePortfolioCurrentData } from '../utils/calculatePortfolioCurrentData';
+import PieChart from '../PieChart/PieChart';
+import { calculatePortfolioCurrentData } from '../../utils/calculatePortfolioCurrentData';
 import AddTransactionButton from '@/components/ui/AddTransactionButton';
 import { useGetPortfolio } from '@/store/hooks/useGetPortfolio';
 import { useAppSelector } from '@/store';
 import { selectUser } from '@/store/auth/auth.slice';
 import SignInButton from '@/components/ui/SignInButton';
 import emptyPortfolioImg from '@/assets/images/empty-portfolio.jpg';
+import classes from './styles/PortfolioGeneralInfo.module.css';
 
 const PortfolioGeneralInfo: React.FC = () => {
   const user = useAppSelector(selectUser);
+  const screens = Grid.useBreakpoint();
   const { portfolio, portfolioError, portfolioLoading } = useGetPortfolio();
   const assetsIds = portfolio.assets.map((asset) => asset.id).join(',');
   const { data, error, isLoading } = useGetTickerQuery(assetsIds, {
@@ -48,7 +50,11 @@ const PortfolioGeneralInfo: React.FC = () => {
   if (!portfolio.totalPrice) {
     return (
       <Flex align="center" vertical>
-        <Typography.Title level={3} style={{ textAlign: 'center' }}>
+        <Typography.Title
+          level={3}
+          className="sider-btn-margin"
+          style={{ textAlign: 'center' }}
+        >
           Track the status of your assets. And watch your portfolio flourish!
         </Typography.Title>
         {!user && (
@@ -86,8 +92,9 @@ const PortfolioGeneralInfo: React.FC = () => {
 
   return (
     <Flex vertical>
-      <Flex justify="space-between">
+      <Flex justify="space-between" className={classes.statistic}>
         <AppStatistic
+          titleClassName="sider-btn-margin"
           asset={{
             name: 'Portfolio',
             currentTotalPrice: portfolioCurrentData.totalPrice,
@@ -95,7 +102,7 @@ const PortfolioGeneralInfo: React.FC = () => {
           }}
           titleStyle={{ fontWeight: 500, fontSize: 26, color: '#000000e0' }}
         />
-        <AddTransactionButton />
+        {!screens.xs && <AddTransactionButton />}
       </Flex>
       <Typography.Paragraph style={{ marginBlockStart: '1rem' }}>
         <span
@@ -112,6 +119,11 @@ const PortfolioGeneralInfo: React.FC = () => {
           {portfolioCurrentData.priceDiffUsd.toFixed(2)}$
         </Typography.Text>
       </Typography.Paragraph>
+      {screens.xs && (
+        <AddTransactionButton
+          style={{ alignSelf: 'flex-start', marginBlock: '5px' }}
+        />
+      )}
       <Divider style={{ marginBlockStart: '5px' }} />
       {portfolioCurrentData.chartData.length ? (
         <>

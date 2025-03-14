@@ -1,8 +1,19 @@
 import { useMemo } from 'react';
-import { Alert, Card, Empty, Flex, List, Spin, Tag, Typography } from 'antd';
+import {
+  Alert,
+  Card,
+  Empty,
+  Flex,
+  Grid,
+  List,
+  Spin,
+  Tag,
+  Typography,
+} from 'antd';
 import Decimal from 'decimal.js';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setSelectedAssetAction } from '@/store/portfolio/portfolio.slice';
+import { setIsSiderCollapsedAction } from '@/store/layout/layout.slice';
 import { coinloreApi, useGetTickerQuery } from '@/store/coinlore/coinlore.api';
 import { useGetPortfolio } from '@/store/hooks/useGetPortfolio';
 import { selectUser } from '@/store/auth/auth.slice';
@@ -15,6 +26,7 @@ export const PortfolioSider: React.FC = () => {
   const user = useAppSelector(selectUser);
   const { portfolio, portfolioError, portfolioLoading } = useGetPortfolio();
   const assetsIds = portfolio.assets.map((asset) => asset.id).join(',');
+  const screens = Grid.useBreakpoint();
 
   const { data, error, isLoading } = useGetTickerQuery(assetsIds, {
     pollingInterval: 3 * 60 * 1000,
@@ -62,6 +74,9 @@ export const PortfolioSider: React.FC = () => {
         label: asset.name,
       })
     );
+    if (!screens.md) {
+      dispatch(setIsSiderCollapsedAction(true));
+    }
     dispatch(coinloreApi.util.invalidateTags(['Ticker']));
   };
 
@@ -130,7 +145,7 @@ export const PortfolioSider: React.FC = () => {
               key={asset.key}
               style={{
                 borderBlockEnd: 'none',
-                paddingInlineEnd: '3px',
+                paddingInline: '3px',
                 cursor: 'pointer',
               }}
               onClick={() => onAssetClick(asset)}

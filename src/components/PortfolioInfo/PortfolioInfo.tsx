@@ -1,5 +1,5 @@
 import TransactionDrawer from './components/TransactionDrawer';
-import PortfolioGeneralInfo from './components/PortfolioGeneralInfo';
+import PortfolioGeneralInfo from './components/PortfolioGeneralInfo/PortfolioGeneralInfo';
 import { useAppDispatch, useAppSelector } from '@/store';
 import {
   selectSelectedAsset,

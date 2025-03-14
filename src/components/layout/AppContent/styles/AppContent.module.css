@@ -1,4 +1,4 @@
-.MarketStatisticPage {
+.withSider {
   margin-inline-start: 410px;
   padding: 1rem 1rem 1rem 2rem;
 
@@ -6,7 +6,12 @@
     margin-inline-start: 350px;
   }
 
-  @media (max-width: 767px) {
+  @media (min-width: 450px) and (max-width: 767px) {
     margin-inline-start: 32px;
+  }
+
+  @media (max-width: 449px) {
+    margin-inline-start: 0;
+    padding: 14px;
   }
 }

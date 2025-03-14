@@ -1,7 +1,7 @@
 import { Descriptions, Tag } from 'antd';
 import { formatNumber } from '@utils/formatNumber';
-import { Coin } from '@/store/coinlore/coinloreTypes';
-import classes from './styles/CoinDetails.module.css';
+import { Coin } from '@store/coinlore/coinloreTypes';
+import classes from './styles/CoinDescription.module.css';
 
 interface CoinDescriptionProps {
   data: Coin;
@@ -13,7 +13,10 @@ const CoinDescription: React.FC<CoinDescriptionProps> = ({
   isFetching,
 }) => {
   return (
-    <Descriptions column={1} className={isFetching ? 'blur-loading' : ''}>
+    <Descriptions
+      column={1}
+      className={`${classes.descriptions}${isFetching ? ' blur-loading' : ''}`}
+    >
       <Descriptions.Item key="price_usd" label={<b>Price</b>}>
         <b>${formatNumber(Number(data.price_usd))}</b>
       </Descriptions.Item>

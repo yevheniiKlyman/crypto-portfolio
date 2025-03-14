@@ -1,0 +1,23 @@
+.title {
+  @media (max-width: 449px) {
+    text-align: center;
+  }
+}
+
+.descriptions {
+  max-width: 400px;
+
+  :global(.ant-descriptions-item-container) {
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+  }
+
+  :global(.ant-descriptions-item-content) {
+    word-break: keep-all;
+    min-width: auto !important;
+    justify-content: flex-end;
+  }
+
+  :global(.ant-tag) {
+    margin-inline-end: 0;
+  }
+}

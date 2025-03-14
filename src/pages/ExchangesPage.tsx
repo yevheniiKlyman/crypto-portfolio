@@ -1,5 +1,5 @@
-import Exchanges from '@/components/Exchanges/Exchanges';
-import AppContent from '@/components/layout/AppContent';
+import Exchanges from '@components/Exchanges/Exchanges';
+import AppContent from '@components/layout/AppContent/AppContent';
 import { Flex } from 'antd';
 
 const ExchangesPage: React.FC = () => {
@@ -7,7 +7,7 @@ const ExchangesPage: React.FC = () => {
     <AppContent>
       <Flex
         style={{
-          paddingInline: '1rem',
+          paddingInline: '5px',
         }}
         vertical
         align="center"

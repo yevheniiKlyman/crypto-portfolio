@@ -70,8 +70,9 @@ const CoinDetailsInner: React.FC = () => {
         </Title>
         <CoinDescription data={coinData} isFetching={isFetching} />
         <Flex
-          gap="small"
+          gap="14px"
           align="center"
+          wrap
           style={{ marginTop: '1.5rem' }}
           className={isFetching ? 'blur-loading' : ''}
         >

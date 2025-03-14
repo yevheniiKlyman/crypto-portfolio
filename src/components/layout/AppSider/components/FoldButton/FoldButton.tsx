@@ -1,10 +1,10 @@
 import { Button } from 'antd';
-import { UnorderedListOutlined } from '@ant-design/icons';
+import { CloseOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '@/store';
 import {
   selectIsSiderCollapsed,
   setIsSiderCollapsedAction,
-} from '@/store/layout/layout.slice';
+} from '@store/layout/layout.slice';
 import classes from './styles/FoldButton.module.css';
 
 const FoldButton: React.FC = () => {
@@ -13,10 +13,12 @@ const FoldButton: React.FC = () => {
 
   return (
     <Button
-      icon={<UnorderedListOutlined />}
-      className={classes.foldButton}
+      icon={isSiderCollapsed ? <UnorderedListOutlined /> : <CloseOutlined />}
+      className={`${classes.foldButton} ${
+        isSiderCollapsed ? classes.folded : ''
+      }`}
       size="large"
-      color="green"
+      color={isSiderCollapsed ? 'green' : 'danger'}
       variant="solid"
       onClick={() => {
         dispatch(setIsSiderCollapsedAction(!isSiderCollapsed));

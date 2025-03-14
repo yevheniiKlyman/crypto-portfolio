@@ -1,0 +1,7 @@
+.statistic {
+  :global(.ant-statistic-title) {
+    @media (max-width: 449px) {
+      margin-block-end: 12px;
+    }
+  }
+}

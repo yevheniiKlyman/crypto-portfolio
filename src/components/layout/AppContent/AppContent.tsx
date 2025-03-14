@@ -1,7 +1,7 @@
 import { Layout } from 'antd';
-import AuthModal from '../AuthModal/AuthModal';
-import SignOutModal from '../SignOutModal';
-import SiderOverlay from './AppSider/components/SiderOverlay';
+import AuthModal from '../../AuthModal/AuthModal';
+import SignOutModal from '../../SignOutModal';
+import classes from './styles/AppContent.module.css';
 
 const contentStyle: React.CSSProperties = {
   minHeight: 'calc(100vh - 60px)',
@@ -16,19 +16,23 @@ interface AppContentProps {
   children: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
+  withSider?: boolean;
 }
 
 const AppContent: React.FC<AppContentProps> = ({
   children,
   style = {},
   className = '',
+  withSider,
 }) => {
   return (
-    <Layout.Content style={{ ...contentStyle, ...style }} className={className}>
+    <Layout.Content
+      style={{ ...contentStyle, ...style }}
+      className={`${className} ${withSider ? classes.withSider : ''}`}
+    >
       {children}
       <AuthModal />
       <SignOutModal />
-      <SiderOverlay />
     </Layout.Content>
   );
 };

@@ -10,7 +10,7 @@ html {
 }
 
 body {
-  min-width: 450px;
+  min-width: 350px;
 }
 
 .blur-loading {
@@ -20,4 +20,10 @@ body {
 
 .ant-statistic-content-suffix {
   margin-inline-start: 0 !important;
+}
+
+.sider-btn-margin {
+  @media (max-width: 449px) {
+    margin-inline-start: 40px;
+  }
 }

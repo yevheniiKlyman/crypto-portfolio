@@ -8,13 +8,21 @@ interface AppStatisticProps {
     usdDiff: number;
   };
   titleStyle?: React.CSSProperties;
+  titleClassName?: string;
+  className?: string;
 }
 
-const AppStatistic: React.FC<AppStatisticProps> = ({ asset, titleStyle }) => {
+const AppStatistic: React.FC<AppStatisticProps> = ({
+  asset,
+  titleStyle,
+  titleClassName = '',
+  className = '',
+}) => {
   return (
     <Statistic
+      className={className}
       title={
-        <span style={titleStyle ? titleStyle : {}}>
+        <span className={titleClassName} style={titleStyle ? titleStyle : {}}>
           {asset.name}
         </span>
       }

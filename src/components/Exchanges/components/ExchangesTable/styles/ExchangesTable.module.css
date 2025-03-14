@@ -1,4 +1,10 @@
 .ExchangesTable {
+  overflow-x: scroll;
+
+  tbody {
+    background-color: white;
+  }
+  
   :global(.ant-table-row:hover) {
     cursor: pointer;
   }

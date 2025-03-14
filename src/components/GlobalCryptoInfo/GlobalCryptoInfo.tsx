@@ -9,6 +9,7 @@ import {
 } from 'antd';
 import { InfoCircleTwoTone } from '@ant-design/icons';
 import { useGetGlobalCryptoInfoQuery } from '@store/coinlore/coinlore.api';
+import classes from './styles/GlobalCryptoInfo.module.css';
 
 const GlobalCryptoInfo: React.FC = () => {
   const { data, error, isLoading } = useGetGlobalCryptoInfoQuery(null, {
@@ -18,14 +19,17 @@ const GlobalCryptoInfo: React.FC = () => {
 
   return (
     <>
-      <Typography.Title level={2}>
-        Global crypto statistics&#160;
-        <Tooltip title="According to coinlore.com">
-          <InfoCircleTwoTone style={{ fontSize: '32px' }} />
-        </Tooltip>
+      <Typography.Title level={2} className={`${classes.title} sider-btn-margin`}>
+        Global crypto&#160;
+        <span style={{ display: 'inline-flex' }}>
+          statistics&#160;
+          <Tooltip title="According to coinlore.com">
+            <InfoCircleTwoTone style={{ fontSize: '26px' }} />
+          </Tooltip>
+        </span>
       </Typography.Title>
       {!isLoading && !error && data && (
-        <Descriptions column={1}>
+        <Descriptions column={1} className={classes.descriptions}>
           {data.map((item) => {
             return (
               <Descriptions.Item key={item.key} label={item.label}>

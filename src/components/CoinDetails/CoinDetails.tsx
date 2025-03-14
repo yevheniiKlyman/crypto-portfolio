@@ -13,6 +13,7 @@ const CoinDetails: React.FC = () => {
       <Button
         icon={<LeftOutlined />}
         style={{ marginBottom: '1rem' }}
+        className='sider-btn-margin'
         onClick={() => {
           dispatch(setCoinIdAction(''));
           setTimeout(() => {

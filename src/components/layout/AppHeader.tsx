@@ -8,7 +8,7 @@ const headerStyle: React.CSSProperties = {
   left: 0,
   right: 0,
   width: '100%',
-  minWidth: '450px',
+  minWidth: '350px',
   zIndex: 101,
   display: 'flex',
   justifyContent: 'center',
@@ -25,7 +25,7 @@ const AppHeader: React.FC = () => {
       <Flex
         align="center"
         justify="left"
-        style={{ width: '100%', maxWidth: '1600px', paddingInline: '1rem' }}
+        style={{ width: '100%', maxWidth: '1600px' }}
       >
         <Navigation />
         <UserButton />

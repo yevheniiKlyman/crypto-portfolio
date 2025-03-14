@@ -1,6 +1,15 @@
 import { useMemo } from 'react';
 import Decimal from 'decimal.js';
-import { Alert, Button, Divider, Flex, Spin, Tag, Typography } from 'antd';
+import {
+  Alert,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  Spin,
+  Tag,
+  Typography,
+} from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 import AddTransactionButton from '@/components/ui/AddTransactionButton';
 import AppStatistic from '@/components/ui/AppStatistic';
@@ -19,6 +28,7 @@ const PortfolioAssetInfo: React.FC = () => {
   const { portfolio, portfolioError, portfolioLoading } = useGetPortfolio();
   const assetsIds = portfolio.assets.map((asset) => asset.id).join(',');
   const selectedAsset = useAppSelector(selectSelectedAsset);
+  const screens = Grid.useBreakpoint();
   const { data, error, isLoading } = useGetTickerQuery(assetsIds, {
     pollingInterval: 3 * 60 * 1000,
     skipPollingIfUnfocused: true,
@@ -44,7 +54,7 @@ const PortfolioAssetInfo: React.FC = () => {
     return {
       name: `(${ticker.symbol}) ${ticker.name}`,
       currentPrice: formatNumber(Number(ticker.price_usd)),
-      averagePrice: formatNumber(asset.averagePrice),
+      averagePrice: formatNumber(asset.averagePrice, asset.averagePrice >= 100 ? 2 : 0),
       currentTotalPrice,
       totalPrice: asset.totalPrice,
       totalPriceUsdDiff,
@@ -80,13 +90,14 @@ const PortfolioAssetInfo: React.FC = () => {
       <Flex justify="space-between" style={{ marginBlockEnd: '1rem' }}>
         <Button
           icon={<LeftOutlined />}
+          className='sider-btn-margin'
           onClick={() => {
             dispatch(setSelectedAssetAction(null));
           }}
         >
           Back to Portfolio
         </Button>
-        <AddTransactionButton />
+        {!screens.xs && <AddTransactionButton />}
       </Flex>
       {assetData ? (
         <>
@@ -144,6 +155,7 @@ const PortfolioAssetInfo: React.FC = () => {
             </span>
             {assetData.totalAmount}
           </Typography.Paragraph>
+          {screens.xs && <AddTransactionButton style={{ marginBlockEnd: '8px' }} />}
           <Divider style={{ marginBlockStart: '5px' }} />
           <AssetTransactions />
         </>
