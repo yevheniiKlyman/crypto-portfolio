@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import {
   PieChartOutlined,
@@ -56,6 +56,7 @@ const Navigation: React.FC = () => {
         width: '100%',
         minWidth: 0,
         flex: 'auto',
+        height: '100%',
       }}
       className={classes.navigation}
     />

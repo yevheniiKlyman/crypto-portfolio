@@ -6,12 +6,12 @@ import {
   useLazyGetMarketsForCoinQuery,
 } from '@store/coinlore/coinlore.api';
 import { selectCoinId } from '@store/coinlore/coinlore.slice';
-import { useGetWatchlist } from '@/store/hooks/useGetWatchlist';
-import { selectUser } from '@/store/auth/auth.slice';
+import { useGetWatchlist } from '@store/hooks/useGetWatchlist';
+import { selectUser } from '@store/auth/auth.slice';
 import CoinDescription from './CoinDescription/CoinDescription';
-import Markets from './Markets';
+import Markets from './Markets/Markets';
 import WatchlistButtons from './WatchlistButtons/WatchlistButtons';
-import SignInButton from '@/components/ui/SignInButton';
+import SignInButton from '@components/ui/SignInButton';
 
 const { Title, Paragraph } = Typography;
 

@@ -1,5 +1,6 @@
 import { Divider, Table, TableProps, Typography } from 'antd';
-import { MarketForCoin } from '@/store/coinlore/coinloreTypes';
+import { MarketForCoin } from '@store/coinlore/coinloreTypes';
+import classes from './styles/Markets.module.css';
 
 interface MarketsProps {
   data: MarketForCoin[];
@@ -47,12 +48,13 @@ const Markets: React.FC<MarketsProps> = ({ data }) => (
       Top Markets For {data[0].base}
     </Typography.Title>
     <Table<MarketForCoin>
+      className={classes.table}
       columns={columns}
       dataSource={data}
       size="small"
       pagination={false}
       bordered
-      style={{ marginTop: '1rem' }}
+      style={{ marginTop: '1rem', overflowX: 'scroll' }}
     />
   </>
 );

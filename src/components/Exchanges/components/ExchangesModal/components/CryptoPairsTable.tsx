@@ -1,5 +1,5 @@
 import { Table, TableProps } from 'antd';
-import { CryptoPair } from '@/store/coinlore/coinloreTypes';
+import { CryptoPair } from '@store/coinlore/coinloreTypes';
 
 interface MarketsProps {
   data: CryptoPair[];
@@ -45,7 +45,7 @@ const CryptoPairsTable: React.FC<MarketsProps> = ({ data }) => (
       size="small"
       pagination={false}
       bordered
-      style={{ marginTop: '1rem' }}
+      style={{ marginTop: '1rem', overflowX: 'scroll' }}
     />
   </>
 );

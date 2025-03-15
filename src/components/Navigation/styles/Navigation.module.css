@@ -23,4 +23,36 @@
   :global(.ant-menu-item-active) {
     --underscore-color: #fff;
   }
+
+  :global(.ant-menu-overflow-item-rest) {
+    display: flex;
+    padding-inline: 0;
+
+    :global(.ant-menu-submenu-title) {
+      display: flex;
+      align-items: center;
+      padding-inline: 5px;
+
+      &:hover {
+        :global(.anticon) {
+          box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.7);
+        }
+      }
+    }
+
+    &:global(.ant-menu-submenu-open) {
+      :global(.anticon) {
+        box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.7);
+      }
+    }
+
+    :global(.anticon) {
+      font-size: 18px;
+      min-width: 18px;
+      color: #fff;
+      border: 1px solid #ffffff7d;
+      border-radius: 15px;
+      padding: 3px 7px;
+    }
+  }
 }
