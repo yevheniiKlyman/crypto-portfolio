@@ -54,7 +54,7 @@ const PortfolioAssetInfo: React.FC = () => {
     return {
       name: `(${ticker.symbol}) ${ticker.name}`,
       currentPrice: formatNumber(Number(ticker.price_usd)),
-      averagePrice: formatNumber(asset.averagePrice, asset.averagePrice >= 100 ? 2 : 0),
+      averagePrice: formatNumber(asset.averagePrice, asset.averagePrice >= 100 ? 2 : null),
       currentTotalPrice,
       totalPrice: asset.totalPrice,
       totalPriceUsdDiff,
