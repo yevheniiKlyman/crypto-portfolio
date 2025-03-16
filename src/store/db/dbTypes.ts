@@ -9,6 +9,11 @@ export interface Asset {
   transactions: Transaction[];
 }
 
+export interface Assets {
+  totalPrice: number;
+  assets: Asset[];
+}
+
 export interface Portfolio {
   totalPrice: number;
   assets: Asset[];

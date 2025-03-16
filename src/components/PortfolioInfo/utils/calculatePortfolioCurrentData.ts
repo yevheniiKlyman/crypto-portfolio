@@ -1,5 +1,5 @@
 import { Coin } from '@/store/coinlore/coinloreTypes';
-import { Assets } from '@/store/portfolio/portfolioTypes';
+import { Assets } from '@/store/db/dbTypes';
 import Decimal from 'decimal.js';
 
 export const calculatePortfolioCurrentData = (
