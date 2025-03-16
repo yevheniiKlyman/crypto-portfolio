@@ -9,3 +9,18 @@
     }
   }
 }
+
+.datePicker {
+  @media (max-width: 449px) {
+    max-width: calc(100% - 50px);
+
+    :global(.ant-picker-datetime-panel-container) {
+      width: 100%;
+    }
+
+    :global(.ant-picker-panel-layout) {
+      width: 100%;
+      overflow-x: scroll;
+    }
+  }
+}

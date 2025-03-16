@@ -1,8 +1,11 @@
 import { useAppDispatch } from '@/store';
-import { useSignInMutation } from '@/store/auth/auth.api';
+import {
+  useGoogleSignInMutation,
+  useSignInMutation,
+} from '@/store/auth/auth.api';
 import { setIsAuthModalOpenAction } from '@/store/auth/auth.slice';
 import { AuthError } from '@/store/auth/authTypes';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { GoogleOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 
 interface SignInFormProps {
@@ -12,6 +15,8 @@ interface SignInFormProps {
 const SignInForm: React.FC<SignInFormProps> = ({ setShowRegistrationForm }) => {
   const dispatch = useAppDispatch();
   const [signIn, { isLoading, error }] = useSignInMutation();
+  const [googleSignIn, { isLoading: isGLoading, error: gError }] =
+    useGoogleSignInMutation();
 
   const onFinish = async ({
     email,
@@ -61,14 +66,24 @@ const SignInForm: React.FC<SignInFormProps> = ({ setShowRegistrationForm }) => {
       </Form.Item>
 
       <Form.Item style={{ marginBlock: '30px 0' }}>
-        <Button
-          block
-          type="primary"
-          htmlType="submit"
-          style={{ marginBlockEnd: '10px' }}
-          loading={isLoading}
-        >
+        <Button block type="primary" htmlType="submit" loading={isLoading}>
           Sign in
+        </Button>
+        <Button
+          color="primary"
+          variant="outlined"
+          icon={<GoogleOutlined />}
+          block
+          style={{ marginBlock: '10px' }}
+          loading={isGLoading}
+          onClick={async () => {
+            const response = await googleSignIn();
+            if (!response.error) {
+              dispatch(setIsAuthModalOpenAction(false));
+            }
+          }}
+        >
+          Sign in with Google
         </Button>
         <span style={{ paddingBlockEnd: '1px' }}>or</span>
         <Button
@@ -81,11 +96,13 @@ const SignInForm: React.FC<SignInFormProps> = ({ setShowRegistrationForm }) => {
         </Button>
       </Form.Item>
 
-      {error ? (
+      {error || gError ? (
         <Form.Item
           style={{ marginBlock: '5px 0', textTransform: 'capitalize' }}
         >
-          <span style={{ color: 'red' }}>{(error as AuthError).message}</span>
+          <span style={{ color: 'red' }}>
+            {((error || gError) as AuthError).message}
+          </span>
         </Form.Item>
       ) : (
         ''

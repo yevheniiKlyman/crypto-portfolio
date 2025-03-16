@@ -239,6 +239,7 @@ const TransactionForm: React.FC = () => {
           <DatePicker
             showTime={{ format: 'HH:mm' }}
             format="YYYY-MM-DD HH:mm"
+            popupClassName={classes.datePicker}
           />
         </Form.Item>
 
