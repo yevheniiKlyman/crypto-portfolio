@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router';
+import { Routes, Route } from 'react-router-dom';
 import { Layout } from 'antd';
 import MarketStatisticPage from './pages/MarketStatisticPage';
 import PortfolioPage from './pages/PortfolioPage';
