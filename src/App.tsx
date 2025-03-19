@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Layout } from 'antd';
-import MarketStatisticPage from './pages/MarketStatisticPage';
-import PortfolioPage from './pages/PortfolioPage';
-import ExchangesPage from './pages/ExchangesPage';
+import { Flex, Layout, Spin } from 'antd';
+import { onAuthStateChanged } from 'firebase/auth';
 import AppHeader from './components/layout/AppHeader';
 import { useAppDispatch } from './store';
-import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase/firebase';
 import { setIsUserLoadingAction, setUserAction } from './store/auth/auth.slice';
+
+const MarketStatisticPage = React.lazy(
+  () => import('./pages/MarketStatisticPage')
+);
+const PortfolioPage = React.lazy(() => import('./pages/PortfolioPage'));
+const ExchangesPage = React.lazy(() => import('./pages/ExchangesPage'));
 
 const layoutStyle: React.CSSProperties = {
   overflow: 'hidden',
@@ -50,11 +53,19 @@ const App: React.FC = () => {
     <Layout style={layoutStyle}>
       <AppHeader />
       <Layout style={bodyLayoutStyle}>
-        <Routes>
-          <Route path="/" element={<MarketStatisticPage />} />
-          <Route path="/portfolio" element={<PortfolioPage />} />
-          <Route path="/exchanges" element={<ExchangesPage />} />
-        </Routes>
+        <Suspense
+          fallback={
+            <Flex justify="center" style={{ marginTop: '2rem' }}>
+              <Spin size="large" />
+            </Flex>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<MarketStatisticPage />} />
+            <Route path="/portfolio" element={<PortfolioPage />} />
+            <Route path="/exchanges" element={<ExchangesPage />} />
+          </Routes>
+        </Suspense>
       </Layout>
     </Layout>
   );
