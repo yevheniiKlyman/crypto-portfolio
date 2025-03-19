@@ -2,7 +2,7 @@
 
 This project is a web application that allows users to track their cryptocurrency investments, view global cryptocurrency statistics, and manage their portfolios. The application is built using React, Redux Toolkit, Firebase, and Ant Design.
 
-**Check out the app here:** [App Name]. You can test it and explore its features to see how it can help you manage your crypto portfolio.
+**Check out the app here:** [Crypto Portfolio Tracker](https://crypto-portfolio-f05ee.web.app). You can test it and explore its features to see how it can help you manage your crypto portfolio.
 
 ## Features
 
