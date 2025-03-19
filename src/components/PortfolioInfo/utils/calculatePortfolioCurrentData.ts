@@ -1,20 +1,12 @@
 import { Coin } from '@/store/coinlore/coinloreTypes';
 import { Assets } from '@/store/db/dbTypes';
 import Decimal from 'decimal.js';
+import { PortfolioCurrentData } from '../types/portfolioTypes';
 
 export const calculatePortfolioCurrentData = (
   assets: Assets,
   tickers: Coin[] | undefined
-): {
-  totalPrice: number;
-  priceDiffUsd: number;
-  priceDiffPrecentage: string;
-  chartData: {
-    label: string;
-    exploded?: boolean;
-    y: number;
-  }[];
-} => {
+): PortfolioCurrentData => {
   if (!assets.totalPrice) {
     return {
       totalPrice: 0,
@@ -32,6 +24,7 @@ export const calculatePortfolioCurrentData = (
     if (!ticker) continue;
 
     currentAssetsTotalPrices.push({
+      name: ticker.symbol,
       label: `(${ticker.symbol}) ${ticker.name}`,
       price: new Decimal(ticker.price_usd).mul(asset.totalAmount).toNumber(),
     });
@@ -56,9 +49,9 @@ export const calculatePortfolioCurrentData = (
       .mul(100)
       .toFixed(2),
     chartData: currentAssetsTotalPrices.map((item) => ({
-      label: item.label,
-      exploded: assets.assets.length > 1,
-      y: Number(
+      name: item.label,
+      label: item.name,
+      value: Number(
         new Decimal(item.price)
           .div(portfolioCurrentTotalPrice)
           .mul(100)

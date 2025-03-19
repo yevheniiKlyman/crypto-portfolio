@@ -127,6 +127,9 @@ const PortfolioGeneralInfo: React.FC = () => {
       <Divider style={{ marginBlockStart: '5px' }} />
       {portfolioCurrentData.chartData.length ? (
         <>
+          <Typography.Title level={2} style={{ marginBlockStart: '1rem', textAlign: 'center' }}>
+            Crypto asset allocation chart
+          </Typography.Title>
           <PieChart dataPoints={portfolioCurrentData.chartData} />
           <Divider />
         </>

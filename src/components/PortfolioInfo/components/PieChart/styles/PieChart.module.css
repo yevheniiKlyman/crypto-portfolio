@@ -1,5 +1,23 @@
 .pieChart {
-  :global(.canvasjs-chart-toolbar > button) {
-    background-color: transparent !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 350px;
+
+  :global(.recharts-legend-wrapper) {
+    display: flex;
+    justify-content: center;
   }
+
+  :global(.recharts-default-legend) {
+    max-width: 575px;
+  }
+}
+
+.customTooltip {
+  background-color: white;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
